@@ -1,8 +1,8 @@
-package Task33;
+package Task3;
 
 import java.util.Random;
 
-public class t1 {
+public class Task1 {
     public static void main(String[] args) {
         Random random = new Random();
         
