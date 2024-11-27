@@ -1,7 +1,6 @@
 package model;
 
 public class Room {
-    
     private int number;
     private String status;
     private double price;
