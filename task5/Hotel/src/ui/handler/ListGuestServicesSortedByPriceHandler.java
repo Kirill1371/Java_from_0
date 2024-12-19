@@ -1,20 +1,21 @@
 package ui.handler;
 
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
-import controller.HotelController;
-
+import controller.ServiceControllerIMPL;
 
 public class ListGuestServicesSortedByPriceHandler implements CommandHandler {
+
+    private final ServiceControllerIMPL serviceController;
+
+    public ListGuestServicesSortedByPriceHandler(ServiceControllerIMPL serviceController) {
+        this.serviceController = serviceController;
+    }
+
     @Override
-    public boolean handle(int choice, Scanner scanner, HotelController hotelController, SimpleDateFormat dateFormat) {
-        if (choice == 24) {
-            System.out.println("Enter guest name:");
-            String guestName = scanner.nextLine();
-            hotelController.listGuestServicesSortedByPrice(guestName);
-            return true;
-        }
-        return false;
+    public void handle(Scanner scanner) {
+        System.out.println("Enter guest name:");
+        String guestName = scanner.nextLine();
+        serviceController.listGuestServicesSortedByPrice(guestName);
     }
 }

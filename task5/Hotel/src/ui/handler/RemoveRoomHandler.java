@@ -1,18 +1,23 @@
 package ui.handler;
 
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
-import controller.HotelController;
+
+import controller.RoomControllerIMPL;
 
 public class RemoveRoomHandler implements CommandHandler {
+    private final RoomControllerIMPL roomController;
+
+    public RemoveRoomHandler(RoomControllerIMPL roomController) {
+        this.roomController = roomController;
+    }
+
     @Override
-    public boolean handle(int choice, Scanner scanner, HotelController hotelController, SimpleDateFormat dateFormat) {
-        if (choice == 2) {
-            System.out.println("Enter room number:");
-            int roomNumber = scanner.nextInt();
-            hotelController.removeRoom(roomNumber);
-            return true;
-        }
-        return false;
+    public void handle(Scanner scanner) {
+        System.out.println("Enter room number:");
+        int roomNumber = scanner.nextInt();
+        roomController.removeRoom(roomNumber);
+        System.out.println("Room removed successfully.");
     }
 }
+
+

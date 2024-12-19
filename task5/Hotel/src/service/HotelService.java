@@ -95,8 +95,8 @@ public class HotelService implements IHotelService {
     @Override
     public List<Room> getAvailableRooms() {
         return hotelRepository.getAllRooms().stream()
-                .filter(room -> room.getStatus().equals("Available"))
-                .collect(Collectors.toList());
+        .filter(room -> room.getStatus().equals("Available"))
+        .collect(Collectors.toList());
     }
 
     @Override
@@ -107,30 +107,30 @@ public class HotelService implements IHotelService {
     @Override
     public List<Room> getRoomsSortedByPrice() {
         return hotelRepository.getAllRooms().stream()
-                .sorted((r1, r2) -> Double.compare(r1.getPrice(), r2.getPrice()))
-                .collect(Collectors.toList());
+        .sorted((r1, r2) -> Double.compare(r1.getPrice(), r2.getPrice()))
+        .collect(Collectors.toList());
     }
 
     @Override
     public List<Room> getRoomsSortedByCapacity() {
         return hotelRepository.getAllRooms().stream()
-                .sorted((r1, r2) -> Integer.compare(r1.getCapacity(), r2.getCapacity()))
-                .collect(Collectors.toList());
+        .sorted((r1, r2) -> Integer.compare(r1.getCapacity(), r2.getCapacity()))
+        .collect(Collectors.toList());
     }
 
     @Override
     public List<Room> getRoomsSortedByStars() {
         return hotelRepository.getAllRooms().stream()
-                .sorted((r1, r2) -> Integer.compare(r1.getStars(), r2.getStars()))
-                .collect(Collectors.toList());
+        .sorted((r1, r2) -> Integer.compare(r1.getStars(), r2.getStars()))
+        .collect(Collectors.toList());
     }
 
     @Override
     public List<Room> getAvailableRoomsSortedByPrice() {
         return getAvailableRooms().
         stream()
-                .sorted((r1, r2) -> Double.compare(r1.getPrice(), r2.getPrice()))
-                .collect(Collectors.toList());
+        .sorted((r1, r2) -> Double.compare(r1.getPrice(), r2.getPrice()))
+        .collect(Collectors.toList());
     }
 
     @Override
@@ -249,63 +249,23 @@ public class HotelService implements IHotelService {
 
 
     @Override
-    // public void importRoomsFromCSV(String filePath) {
-    //     try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-    //         String line;
-    //         while ((line = br.readLine()) != null) {
-    //             String[] values = line.split(",");
-    //             int id = Integer.parseInt(values[0]);
-    //             int number = Integer.parseInt(values[1]);
-    //             String status = values[2];
-    //             double price = Double.parseDouble(values[3]);
-    //             int capacity = Integer.parseInt(values[4]);
-    //             int stars = Integer.parseInt(values[5]);
-
-    //             Room existingRoom = hotelRepository.getRoom(number);
-    //             if (existingRoom != null) {
-    //                 // Обновление данных
-    //                 existingRoom.setStatus(status);
-    //                 existingRoom.setPrice(price);
-    //                 existingRoom.setCapacity(capacity);
-    //                 existingRoom.setStars(stars);
-    //             } else {
-    //                 // Добавление новой комнаты
-    //                 Room newRoom = new Room(id, number, status, price, capacity, stars);
-    //                 hotelRepository.addRoom(newRoom);
-    //             }
-    //         }
-    //         System.out.println("Rooms imported successfully.");
-    //     } catch (IOException e) {
-    //         System.out.println("Error during import: " + e.getMessage());
-    //     }
-    // }
-
     public void importRoomsFromCSV(String filePath) {
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 try {
-                    // Пропускаем пустые строки
                     if (line.trim().isEmpty()) {
                         continue;
                     }
-    
-                    // Разбиваем строку на части
                     String[] parts = line.split(",");
-    
-                    // Проверяем количество колонок
                     if (parts.length != 4) {
                         System.out.println("Invalid line format (expected 4 values): " + line);
                         continue;
                     }
-    
-                    // Парсим данные
                     int roomNumber = Integer.parseInt(parts[0].trim());
                     double price = Double.parseDouble(parts[1].trim());
                     int capacity = Integer.parseInt(parts[2].trim());
                     int stars = Integer.parseInt(parts[3].trim());
-    
-                    // Добавляем комнату в список
                     Room newRoom = new Room(0, 507, "occupied", price, capacity, stars);
                     hotelRepository.addRoom(newRoom);
                 } catch (NumberFormatException e) {

@@ -1,89 +1,58 @@
 package test;
 
+import ui.ConsoleUI;
+import ui.MenuItem;
+import ui.handler.*;
+
+import controller.*;
+import repository.HotelRepository;
+import service.HotelService;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import controller.HotelController;
-import repository.HotelRepository;
-import service.HotelService;
-import ui.ConsoleUI;
-import ui.handler.AddRoomHandler;
-import ui.handler.AddServiceHandler;
-import ui.handler.CheckInHandler;
-import ui.handler.CheckOutHandler;
-import ui.handler.CommandHandler;
-import ui.handler.ExitHandler;
-import ui.handler.ExportRoomsHandler;
-import ui.handler.GetRoomDetailsHandler;
-import ui.handler.GetTotalAvailableRoomsHandler;
-import ui.handler.GetTotalGuestsHandler;
-import ui.handler.GetTotalPaymentForGuestHandler;
-import ui.handler.ImportRoomsHandler;
-import ui.handler.ListAllGuestsHandler;
-import ui.handler.ListAllRoomsHandler;
-import ui.handler.ListAvailableRoomsHandler;
-import ui.handler.ListAvailableRoomsSortedByCapacityHandler;
-import ui.handler.ListAvailableRoomsSortedByPriceHandler;
-import ui.handler.ListAvailableRoomsSortedByStarsHandler;
-import ui.handler.ListGuestServicesSortedByPriceHandler;
-import ui.handler.ListGuestsSortedByCheckOutDateHandler;
-import ui.handler.ListGuestsSortedByNameHandler;
-import ui.handler.ListLastThreeStaysHandler;
-import ui.handler.ListRoomsAvailableByDateHandler;
-import ui.handler.ListRoomsSortedByCapacityHandler;
-import ui.handler.ListRoomsSortedByStarsHandler;
-import ui.handler.ListServicesSortedByCategoryAndPriceHandler;
-import ui.handler.RemoveRoomHandler;
-import ui.handler.SetRoomPriceHandler;
-import ui.handler.SetRoomStatusHandler;
-import ui.handler.listRoomsSortedByPriceHandler;
-
 public class HotelManagementTest {
-
     public static void main(String[] args) {
-
         HotelRepository hotelRepository = new HotelRepository();
         HotelService hotelService = new HotelService(hotelRepository);
-        HotelController hotelController = new HotelController(hotelService);
+        CheckControllerIMPL checkController = new CheckControllerIMPL(hotelService);
+        GuestControllerIMPL guestController = new GuestControllerIMPL(hotelService);
+        RoomControllerIMPL roomController = new RoomControllerIMPL(hotelService);
+        ServiceControllerIMPL serviceController = new ServiceControllerIMPL(hotelService);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        List<CommandHandler> handlers = new ArrayList<>();
-        handlers.add(new AddRoomHandler());
-        handlers.add(new RemoveRoomHandler());
-        handlers.add(new CheckInHandler());
-        handlers.add(new CheckOutHandler());
-        handlers.add(new SetRoomStatusHandler());
-        handlers.add(new SetRoomPriceHandler());
-        handlers.add(new AddServiceHandler());
-        handlers.add(new ListAllRoomsHandler());
-        handlers.add(new ListAvailableRoomsHandler());
-        handlers.add(new ListAllGuestsHandler());
-        handlers.add(new listRoomsSortedByPriceHandler());
-        handlers.add(new ListRoomsSortedByCapacityHandler());
-        handlers.add(new ListRoomsSortedByStarsHandler());
-        handlers.add(new ListAvailableRoomsSortedByPriceHandler());
-        handlers.add(new ListAvailableRoomsSortedByCapacityHandler());
-        handlers.add(new ListAvailableRoomsSortedByStarsHandler());
-        handlers.add(new ListGuestsSortedByNameHandler());
-        handlers.add(new ListGuestsSortedByCheckOutDateHandler());
-        handlers.add(new GetTotalAvailableRoomsHandler());
-        handlers.add(new GetTotalGuestsHandler());
-        handlers.add(new ListRoomsAvailableByDateHandler());
-        handlers.add(new GetTotalPaymentForGuestHandler());
-        handlers.add(new ListLastThreeStaysHandler());
-        handlers.add(new ListGuestServicesSortedByPriceHandler());
-        handlers.add(new ListGuestsSortedByCheckOutDateHandler());
-        handlers.add(new ListServicesSortedByCategoryAndPriceHandler());
-        handlers.add(new GetRoomDetailsHandler());
-        handlers.add(new ExitHandler());
-        handlers.add(new ImportRoomsHandler());
-        handlers.add(new ExportRoomsHandler());
+        List<MenuItem> menuItems = new ArrayList<>();
+        menuItems.add(new MenuItem("Add Room", new AddRoomHandler(roomController)));
+        menuItems.add(new MenuItem("Remove Room", new RemoveRoomHandler(roomController)));
+        menuItems.add(new MenuItem("Check In Guest", new CheckInHandler(checkController, dateFormat)));
+        menuItems.add(new MenuItem("Check Out Guest", new CheckOutHandler(checkController)));
+        menuItems.add(new MenuItem("Set Room status", new SetRoomStatusHandler(roomController)));
+        menuItems.add(new MenuItem("Set Room price", new SetRoomPriceHandler(roomController)));
+        menuItems.add(new MenuItem("Add Service", new AddServiceHandler(serviceController)));
+        menuItems.add(new MenuItem("List All Rooms", new ListAllRoomsHandler(roomController)));
+        menuItems.add(new MenuItem("List Available Rooms", new ListAvailableRoomsHandler(roomController)));
+        menuItems.add(new MenuItem("List All guests", new ListAllGuestsHandler(guestController)));
+        menuItems.add(new MenuItem("List Rooms Sorted By Price", new listRoomsSortedByPriceHandler(roomController)));
+        menuItems.add(new MenuItem("List Rooms Sorted By Capacity", new ListRoomsSortedByCapacityHandler(roomController)));
+        menuItems.add(new MenuItem("List Rooms Sorted By Stars", new ListRoomsSortedByStarsHandler(roomController)));
+        menuItems.add(new MenuItem("List Available Rooms Sorted By Price", new ListAvailableRoomsSortedByPriceHandler(roomController)));
+        menuItems.add(new MenuItem("List Available Rooms Sorted By Capacity", new ListAvailableRoomsSortedByCapacityHandler(roomController)));
+        menuItems.add(new MenuItem("List Available Rooms Sorted By Stars", new ListAvailableRoomsSortedByStarsHandler(roomController)));
+        menuItems.add(new MenuItem("List Guests Sorted By Name", new ListGuestsSortedByNameHandler(guestController)));
+        menuItems.add(new MenuItem("List Guests Sorted By Check Out Date", new ListGuestsSortedByCheckOutDateHandler(guestController)));
+        menuItems.add(new MenuItem("Get Total Available Rooms", new GetTotalAvailableRoomsHandler(roomController)));
+        menuItems.add(new MenuItem("Get Total Guests", new GetTotalGuestsHandler(guestController)));
+        menuItems.add(new MenuItem("List Rooms Available By Date", new ListRoomsAvailableByDateHandler(roomController, dateFormat)));
+        menuItems.add(new MenuItem("Get Total Payment For Guest", new GetTotalPaymentForGuestHandler(guestController)));
+        menuItems.add(new MenuItem("List Last Three Stays", new ListLastThreeStaysHandler(roomController)));
+        menuItems.add(new MenuItem("List Guest Services Sorted By Price", new ListGuestServicesSortedByPriceHandler(serviceController)));
+        menuItems.add(new MenuItem("List Guest Services Sorted By Date", new ListGuestServicesSortedByDateHandler(serviceController)));
+        menuItems.add(new MenuItem("List Services Sorted By Category And Price", new ListServicesSortedByCategoryAndPriceHandler(serviceController)));
+        menuItems.add(new MenuItem("Get Room Details", new GetRoomDetailsHandler(roomController)));
 
-
-        //String filePath = "X:/SENLA/rooms.csv";
-
-        ConsoleUI consoleUI = new ConsoleUI(handlers, hotelController, dateFormat);
+        ConsoleUI consoleUI = new ConsoleUI(menuItems);
         consoleUI.start();
     }
 }
+ 

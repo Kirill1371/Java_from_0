@@ -1,18 +1,24 @@
 package ui.handler;
 
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
-import controller.HotelController;
+
+import controller.CheckControllerIMPL;
 
 public class CheckOutHandler implements CommandHandler {
+
+    private final CheckControllerIMPL checkController;
+
+    public CheckOutHandler(CheckControllerIMPL checkController) {
+        this.checkController = checkController;
+    }
+
     @Override
-    public boolean handle(int choice, Scanner scanner, HotelController hotelController, SimpleDateFormat dateFormat) {
-        if (choice == 4) {
-            System.out.println("Enter room number:");
-            int roomNumber = scanner.nextInt();
-            hotelController.checkOut(roomNumber);
-            return true;
-        }
-        return false;
+    public void handle(Scanner scanner) {
+        System.out.println("Enter room number:");
+        int roomNumber = scanner.nextInt();
+        scanner.nextLine(); 
+
+        checkController.checkOut(roomNumber);
+        System.out.println("Guest checked out successfully.");
     }
 }

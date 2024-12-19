@@ -1,18 +1,18 @@
 package ui.handler;
 
-import java.text.SimpleDateFormat;
 import java.util.Scanner;
 
-import controller.HotelController;
-
+import controller.RoomControllerIMPL;
 
 public class ListAvailableRoomsSortedByCapacityHandler implements CommandHandler {
+
+    private final RoomControllerIMPL roomController;
+
+    public ListAvailableRoomsSortedByCapacityHandler(RoomControllerIMPL roomController) { 
+        this.roomController = roomController;
+    }
     @Override
-    public boolean handle(int choice, Scanner scanner, HotelController hotelController, SimpleDateFormat dateFormat) {
-        if (choice == 15) {
-            hotelController.listAvailableRoomsSortedByCapacity();
-            return true;
-        }
-        return false;
+    public void handle(Scanner scanner) {
+        roomController.listAvailableRoomsSortedByCapacity();
     }
 }
