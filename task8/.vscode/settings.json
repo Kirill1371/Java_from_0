@@ -1,0 +1,14 @@
+{
+    "java.project.sourcePaths": [
+        "src",
+        "test"
+    ],
+    "java.project.resourceFilters": [
+        "src/resources"
+    ],
+    "java.configuration.updateBuildConfiguration": "interactive",
+    "java.project.referencedLibraries": [
+        "Dir\\javax.inject-1.jar"
+    ]
+  }
+  
