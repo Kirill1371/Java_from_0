@@ -11,9 +11,9 @@ public class CheckControllerIMPL implements CheckController{
     @Inject
     private IHotelService hotelService;
 
-    public CheckControllerIMPL(IHotelService hotelService) {
-        this.hotelService = hotelService;
-    }
+    // public CheckControllerIMPL(IHotelService hotelService) {
+    //     this.hotelService = hotelService;
+    // }
 
 
     public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {

@@ -14,9 +14,9 @@ public class RoomControllerIMPL implements RoomController {
     private IHotelService hotelService;
 
 
-    public RoomControllerIMPL(IHotelService hotelService) {
-        this.hotelService = hotelService;
-    }
+    // public RoomControllerIMPL(IHotelService hotelService) {
+    //     this.hotelService = hotelService;
+    // }
 
     public void addRoom(Room room) {
         hotelService.addRoom(room);

@@ -7,11 +7,14 @@ import model.Guest;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class HotelRepository implements IHotelRepository {
     private List<Room> rooms;
     private List<Service> services;
     private List<Guest> guests;
 
+    @Inject
     public HotelRepository() {
         rooms = new ArrayList<>();
         services = new ArrayList<>();

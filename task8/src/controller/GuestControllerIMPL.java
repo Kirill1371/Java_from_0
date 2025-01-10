@@ -11,9 +11,9 @@ public class GuestControllerIMPL implements GuestContrloller{
     @Inject
     private IHotelService hotelService;
 
-    public GuestControllerIMPL(IHotelService hotelService) {
-        this.hotelService = hotelService;
-    }
+    // public GuestControllerIMPL(IHotelService hotelService) {
+    //     this.hotelService = hotelService;
+    // }
 
     public void listAllGuests() {
         List<Guest> guests = hotelService.getAllGuests();

@@ -9,9 +9,9 @@ public class ServiceControllerIMPL implements ServiceController{
     @Inject
     private IHotelService hotelService;
 
-    public ServiceControllerIMPL(IHotelService hotelService) {
-        this.hotelService = hotelService;
-    }
+    // public ServiceControllerIMPL(IHotelService hotelService) {
+    //     this.hotelService = hotelService;
+    // }
 
     public void addService(Service service) {
         hotelService.addService(service);

@@ -9,8 +9,25 @@ public class DependencyInjector {
 
     private static final Map<Class<?>, Object> dependencies = new HashMap<>();
 
-    public static void registerDependency(Class<?> type, Object instance) {
-        dependencies.put(type, instance);
+    public static <T> void registerDependency(Class<T> clazz) {
+        try {
+            T instance = clazz.getDeclaredConstructor().newInstance();
+            injectDependencies(instance); 
+            dependencies.put(clazz, instance);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to register class: " + clazz.getName(), e);
+        }
+    }
+
+    public static <T> void registerDependency(Class<T> interfaceClass, T implementation) {
+        dependencies.put(interfaceClass, implementation);
+    }
+
+    public static <T> T getBean(Class<T> clazz) {
+        if (!dependencies.containsKey(clazz)) {
+            throw new RuntimeException("No dependency registered for: " + clazz.getName());
+        }
+        return clazz.cast(dependencies.get(clazz));
     }
 
     public static void injectDependencies(Object target) {
@@ -22,25 +39,13 @@ public class DependencyInjector {
                 try {
                     field.setAccessible(true);
                     Class<?> fieldType = field.getType();
-                    Object dependency = getDependency(fieldType);
-                    field.set(target, dependency);
+                    Object dependency = getBean(fieldType); 
+                    field.set(target, dependency); 
                 } catch (IllegalAccessException e) {
                     throw new RuntimeException("Failed to inject dependency for field: " + field.getName(), e);
                 }
             }
         }
     }
-
-    private static Object getDependency(Class<?> type) {
-        if (dependencies.containsKey(type)) {
-            return dependencies.get(type);
-        }
-        try {
-            Object instance = type.getDeclaredConstructor().newInstance();
-            dependencies.put(type, instance);
-            return instance;
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to create dependency of type: " + type.getName(), e);
-        }
-    }
 }
+
