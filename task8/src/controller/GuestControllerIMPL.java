@@ -2,18 +2,27 @@ package controller;
 
 import java.util.List;
 
-import javax.inject.Inject;
-
+import annotations.Component;
+import annotations.Inject1;
 import model.Guest;
+import service.HotelService;
 import service.IHotelService;
 
-public class GuestControllerIMPL implements GuestContrloller{
-    @Inject
-    private IHotelService hotelService;
 
-    // public GuestControllerIMPL(IHotelService hotelService) {
-    //     this.hotelService = hotelService;
+@Component
+public class GuestControllerIMPL implements GuestController{
+    @Inject1
+    private HotelService hotelService;
+
+    @Inject1
+    public GuestControllerIMPL(HotelService hotelService) {
+        this.hotelService = hotelService;
+    }
+
+    // @Inject
+    // public GuestControllerIMPL() {
     // }
+
 
     public void listAllGuests() {
         List<Guest> guests = hotelService.getAllGuests();

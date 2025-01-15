@@ -1,16 +1,24 @@
 package controller;
 
-import javax.inject.Inject;
+import annotations.Inject1;
 
+import annotations.Component;
 import model.Service;
+import service.HotelService;
 import service.IHotelService;
 
+@Component
 public class ServiceControllerIMPL implements ServiceController{
-    @Inject
-    private IHotelService hotelService;
+    @Inject1
+    private HotelService hotelService;
 
-    // public ServiceControllerIMPL(IHotelService hotelService) {
-    //     this.hotelService = hotelService;
+    @Inject1
+    public ServiceControllerIMPL(HotelService hotelService) {
+        this.hotelService = hotelService;
+    }
+
+    // public ServiceControllerIMPL() {
+    //     // Конструктор по умолчанию
     // }
 
     public void addService(Service service) {

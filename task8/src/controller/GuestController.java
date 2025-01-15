@@ -1,6 +1,6 @@
 package controller;
 
-public interface GuestContrloller {
+public interface GuestController {
     public void listAllGuests();
     public void listGuestsSortedByName();
     public void listGuestsSortedByCheckOutDate();

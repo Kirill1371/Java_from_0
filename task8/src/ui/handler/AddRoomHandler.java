@@ -41,6 +41,7 @@ import model.Room;
 import java.util.UUID;
 
 public class AddRoomHandler implements CommandHandler {
+
     private final RoomControllerIMPL roomController;
 
     public AddRoomHandler(RoomControllerIMPL roomController) {

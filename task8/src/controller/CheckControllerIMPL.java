@@ -2,18 +2,26 @@ package controller;
 
 import java.util.Date;
 
-import javax.inject.Inject;
+import annotations.Inject1;
 
+import annotations.Component;
 import model.Guest;
+import service.HotelService;
 import service.IHotelService;
 
+@Component
 public class CheckControllerIMPL implements CheckController{
-    @Inject
-    private IHotelService hotelService;
+    @Inject1
+    private HotelService hotelService;
 
-    // public CheckControllerIMPL(IHotelService hotelService) {
-    //     this.hotelService = hotelService;
+    // public CheckControllerIMPL() {
+    //     // Конструктор по умолчанию
     // }
+
+    @Inject1
+    public CheckControllerIMPL(HotelService hotelService) {
+        this.hotelService = hotelService;
+    }
 
 
     public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {

@@ -1,15 +1,19 @@
 {
     "java.project.sourcePaths": [
-        "test",
+        ".",
         "src",
-        ""
+        "test"
     ],
     "java.project.resourceFilters": [
         "src/resources"
     ],
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.project.referencedLibraries": [
-        "Dir\\javax.inject-1.jar"
+        "Dir\\javassist-3.29.2-GA.jar",
+        "x:\\SENLA\\Hotel\\Dir\\slf4j-api-2.0.7.jar",
+        "x:\\SENLA\\Hotel\\Dir\\javax.inject-1.jar",
+        "x:\\SENLA\\Hotel\\Dir\\slf4j-simple-2.0.7.jar",
+        "x:\\SENLA\\Hotel\\Dir\\reflections-0.10.2.jar"
     ]
   }
   

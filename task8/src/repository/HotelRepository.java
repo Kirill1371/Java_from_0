@@ -7,14 +7,20 @@ import model.Guest;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.inject.Inject;
+import annotations.Inject1;
+import annotations.Component;
 
+
+@Component  
 public class HotelRepository implements IHotelRepository {
+
     private List<Room> rooms;
+
     private List<Service> services;
+
     private List<Guest> guests;
 
-    @Inject
+    @Inject1
     public HotelRepository() {
         rooms = new ArrayList<>();
         services = new ArrayList<>();

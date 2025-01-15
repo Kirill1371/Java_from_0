@@ -7,6 +7,8 @@ import model.Stay;
 import java.util.Date;
 import java.util.List;
 
+import annotations.Component;
+
 public interface IHotelService {
     void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate);
     void checkOut(int roomNumber);

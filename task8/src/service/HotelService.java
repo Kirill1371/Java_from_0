@@ -4,11 +4,16 @@ import model.Room;
 import model.Service;
 import model.Guest;
 import model.Stay;
+import repository.HotelRepository;
 import repository.IHotelRepository;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import javax.inject.Inject;
+
+
+import annotations.Component;
+import annotations.Inject1;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -17,26 +22,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+
+@Component
 public class HotelService implements IHotelService {
-    @Inject
-    private IHotelRepository hotelRepository;
+    @Inject1
+    private HotelRepository hotelRepository;
+
     private List<Room> rooms;
 
     public List<Room> getRooms() {
         return rooms;
     }
 
-
-    public HotelService(IHotelRepository hotelRepository) {
+   
+    @Inject1
+    public HotelService(HotelRepository hotelRepository) {
         this.hotelRepository = hotelRepository;
         this.rooms = new ArrayList<>();
     }
 
-
-    // Конструктор без параметров
-    public HotelService() {
-        // Инициализация по умолчанию, если необходимо
-    }
     @Override
     public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {
         Room room = hotelRepository.getRoom(roomNumber);

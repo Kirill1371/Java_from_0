@@ -3,20 +3,28 @@ package controller;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
+import annotations.Inject1;
 
+import annotations.Component;
 import model.Room;
 import model.Stay;
+import service.HotelService;
 import service.IHotelService;
 
+@Component
 public class RoomControllerIMPL implements RoomController {
-    @Inject
-    private IHotelService hotelService;
+    @Inject1
+    private HotelService hotelService;
 
-
-    // public RoomControllerIMPL(IHotelService hotelService) {
-    //     this.hotelService = hotelService;
+    // public RoomControllerIMPL() {
+    //     // Конструктор по умолчанию
     // }
+
+
+    @Inject1
+    public RoomControllerIMPL(HotelService hotelService) {
+        this.hotelService = hotelService;
+    }
 
     public void addRoom(Room room) {
         hotelService.addRoom(room);

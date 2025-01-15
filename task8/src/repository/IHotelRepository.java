@@ -6,6 +6,8 @@ import model.Stay;
 import model.Guest;
 import java.util.List;
 
+import annotations.Component;
+
 public interface IHotelRepository {
     void addRoom(Room room);
     void removeRoom(int roomNumber);

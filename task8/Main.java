@@ -4,10 +4,6 @@ import controller.GuestControllerIMPL;
 import controller.RoomControllerIMPL;
 import controller.ServiceControllerIMPL;
 import model.Room;
-import repository.HotelRepository;
-import repository.IHotelRepository;
-import service.HotelService;
-import service.IHotelService;
 import service.PersistenceService;
 import ui.ConsoleUI;
 import ui.MenuItem;
@@ -21,19 +17,12 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Main {
     public static void main(String[] args) {
 
-        DependencyInjector.registerDependency(HotelRepository.class);
-        DependencyInjector.registerDependency(IHotelRepository.class, DependencyInjector.getBean(HotelRepository.class)); 
-        DependencyInjector.registerDependency(HotelService.class);
-        DependencyInjector.registerDependency(IHotelService.class, DependencyInjector.getBean(HotelService.class)); 
-        DependencyInjector.registerDependency(CheckControllerIMPL.class);
-        DependencyInjector.registerDependency(GuestControllerIMPL.class);
-        DependencyInjector.registerDependency(RoomControllerIMPL.class);
-        DependencyInjector.registerDependency(ServiceControllerIMPL.class);
+        DependencyInjector injector = new DependencyInjector(new String[] {"repository", "service", "controller", "ui.handler"});
 
-        CheckControllerIMPL checkController = DependencyInjector.getBean(CheckControllerIMPL.class);
-        GuestControllerIMPL guestController = DependencyInjector.getBean(GuestControllerIMPL.class);
-        RoomControllerIMPL roomController = DependencyInjector.getBean(RoomControllerIMPL.class);
-        ServiceControllerIMPL serviceController = DependencyInjector.getBean(ServiceControllerIMPL.class);
+        CheckControllerIMPL checkController = injector.getBean(CheckControllerIMPL.class);
+        GuestControllerIMPL guestController = injector.getBean(GuestControllerIMPL.class);
+        RoomControllerIMPL roomController = injector.getBean(RoomControllerIMPL.class);
+        ServiceControllerIMPL serviceController = injector.getBean(ServiceControllerIMPL.class);
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 

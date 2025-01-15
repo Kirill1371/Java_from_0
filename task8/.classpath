@@ -1,4 +1,5 @@
 <classpath>
     <!-- existing classpath entries -->
     <classpathentry kind="lib" path="Dir/javax.inject-1.jar"/>
+    <classpathentry kind="lib" path="Dir/reflections-0.10.2.jar"/>
 </classpath>
