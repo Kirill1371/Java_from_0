@@ -205,31 +205,67 @@ public class HotelRepository implements IHotelRepository {
     }
     
     
+    // @Override
+    // public void addService(String guestName, Service service) {
+    //     String sql = "INSERT INTO \"Service\" (id, name, category, price, date, guest_id) " +
+    //                 "VALUES (?, ?, ?, ?, ?, (SELECT id FROM \"Guest\" WHERE name = ?))";
+
+    //     try (Connection connection = DatabaseConnection.getConnection();
+    //         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+    //         statement.setObject(1, UUID.fromString(service.getId()));
+    //         statement.setString(2, service.getName());
+    //         statement.setString(3, service.getCategory());
+    //         statement.setDouble(4, service.getPrice());
+    //         statement.setTimestamp(5, new java.sql.Timestamp(service.getDate().getTime()));
+    //         statement.setString(6, guestName);
+
+    //         int rowsAffected = statement.executeUpdate();
+    //         if (rowsAffected > 0) {
+    //             System.out.println("Service added for guest: " + guestName);
+    //         } else {
+    //             System.out.println("Guest not found: " + guestName);
+    //         }
+    //     } catch (SQLException e) {
+    //         System.out.println("Error while adding service for guest: " + e.getMessage());
+    //     }
+    // }
+
+
+
     @Override
     public void addService(String guestName, Service service) {
         String sql = "INSERT INTO \"Service\" (id, name, category, price, date, guest_id) " +
                     "VALUES (?, ?, ?, ?, ?, (SELECT id FROM \"Guest\" WHERE name = ?))";
 
-        try (Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            connection.setAutoCommit(false); // Отключаем автокоммит
 
-            statement.setObject(1, UUID.fromString(service.getId()));
-            statement.setString(2, service.getName());
-            statement.setString(3, service.getCategory());
-            statement.setDouble(4, service.getPrice());
-            statement.setTimestamp(5, new java.sql.Timestamp(service.getDate().getTime()));
-            statement.setString(6, guestName);
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setObject(1, UUID.fromString(service.getId()));
+                statement.setString(2, service.getName());
+                statement.setString(3, service.getCategory());
+                statement.setDouble(4, service.getPrice());
+                statement.setTimestamp(5, new java.sql.Timestamp(service.getDate().getTime()));
+                statement.setString(6, guestName);
 
-            int rowsAffected = statement.executeUpdate();
-            if (rowsAffected > 0) {
-                System.out.println("Service added for guest: " + guestName);
-            } else {
-                System.out.println("Guest not found: " + guestName);
+                int rowsAffected = statement.executeUpdate();
+                if (rowsAffected > 0) {
+                    connection.commit(); // Фиксируем транзакцию
+                    System.out.println("Service added for guest: " + guestName);
+                } else {
+                    connection.rollback(); // Откатываем транзакцию, если гость не найден
+                    System.out.println("Guest not found: " + guestName);
+                }
+            } catch (SQLException e) {
+                connection.rollback(); // Откатываем транзакцию при ошибке
+                System.out.println("Error while adding service for guest: " + e.getMessage());
             }
         } catch (SQLException e) {
-            System.out.println("Error while adding service for guest: " + e.getMessage());
+            System.out.println("Database connection error: " + e.getMessage());
         }
     }
+
  
     
     @Override
@@ -317,22 +353,52 @@ public class HotelRepository implements IHotelRepository {
     //     return guests.stream().filter(guest -> guest.getName().equals(name)).findFirst().orElse(null);
     // }
 
+
+
+
+    // @Override
+    // public void addStay(Stay stay) {
+    //     String sql = "INSERT INTO \"Stay\" (id, guestid, roomid, checkindate, checkoutdate) VALUES (?, ?, ?, ?, ?)";
+    //     try (Connection connection = DatabaseConnection.getConnection();
+    //         PreparedStatement statement = connection.prepareStatement(sql)) {
+
+    //         statement.setObject(1, UUID.fromString(stay.getId()));
+    //         statement.setObject(2, UUID.fromString(stay.getGuest().getId()));
+    //         statement.setObject(3, UUID.fromString(stay.getRoom().getId()));
+    //         statement.setTimestamp(4, new java.sql.Timestamp(stay.getCheckInDate().getTime()));
+    //         statement.setTimestamp(5, new java.sql.Timestamp(stay.getCheckOutDate().getTime()));
+
+    //         statement.executeUpdate();
+    //         System.out.println("Stay added successfully!");
+    //     } catch (SQLException e) {
+    //         System.out.println("Error while adding stay: " + e.getMessage());
+    //     }
+    // }
+
+
+
     @Override
     public void addStay(Stay stay) {
         String sql = "INSERT INTO \"Stay\" (id, guestid, roomid, checkindate, checkoutdate) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (Connection connection = DatabaseConnection.getConnection()) {
+            connection.setAutoCommit(false); // Отключаем автокоммит
 
-            statement.setObject(1, UUID.fromString(stay.getId()));
-            statement.setObject(2, UUID.fromString(stay.getGuest().getId()));
-            statement.setObject(3, UUID.fromString(stay.getRoom().getId()));
-            statement.setTimestamp(4, new java.sql.Timestamp(stay.getCheckInDate().getTime()));
-            statement.setTimestamp(5, new java.sql.Timestamp(stay.getCheckOutDate().getTime()));
+            try (PreparedStatement statement = connection.prepareStatement(sql)) {
+                statement.setObject(1, UUID.fromString(stay.getId()));
+                statement.setObject(2, UUID.fromString(stay.getGuest().getId()));
+                statement.setObject(3, UUID.fromString(stay.getRoom().getId()));
+                statement.setTimestamp(4, new java.sql.Timestamp(stay.getCheckInDate().getTime()));
+                statement.setTimestamp(5, new java.sql.Timestamp(stay.getCheckOutDate().getTime()));
 
-            statement.executeUpdate();
-            System.out.println("Stay added successfully!");
+                statement.executeUpdate();
+                connection.commit(); // Фиксируем транзакцию
+                System.out.println("Stay added successfully!");
+            } catch (SQLException e) {
+                connection.rollback(); // Откатываем транзакцию при ошибке
+                System.out.println("Error while adding stay: " + e.getMessage());
+            }
         } catch (SQLException e) {
-            System.out.println("Error while adding stay: " + e.getMessage());
+            System.out.println("Database connection error: " + e.getMessage());
         }
     }
 
