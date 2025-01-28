@@ -10,14 +10,6 @@ public class RoomControllerProxy implements RoomController {
         this.roomController = roomController;
     }
 
-    public void addRoom(Room room) {
-        try {
-            roomController.addRoom(room);
-        } catch(Exception e) {
-            System.out.println("404");
-        }
-    }
-
     public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
 
         try {
@@ -26,15 +18,6 @@ public class RoomControllerProxy implements RoomController {
             System.out.println("404");
         }
        
-    }
-    
-
-    public void removeRoom(int roomNumber) {
-        try {
-            roomController.removeRoom(roomNumber);
-        } catch (Exception e) {
-            System.out.println("404");
-        }
     }
 
     public void removeRoomFromDatabase(int roomNumber) {
@@ -161,22 +144,6 @@ public class RoomControllerProxy implements RoomController {
     public void listLastThreeStays(int roomNumber) {
         try {
             roomController.listLastThreeStays(roomNumber);
-        } catch (Exception e) {
-            System.out.println("404");
-        }
-    }
-
-    public void importRooms(String filePath) {
-        try {
-            roomController.importRooms(filePath);
-        } catch (Exception e) {
-            System.out.println("404");
-        }
-    }
-
-    public void exportRooms(String filePath) {
-        try {
-            roomController.exportRooms(filePath);
         } catch (Exception e) {
             System.out.println("404");
         }

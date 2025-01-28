@@ -6,6 +6,4 @@ public interface GuestController {
     public void listGuestsSortedByCheckOutDate();
     public void getTotalGuests();
     public void getTotalPaymentForGuest(String guestName);  
-    public void importGuests(String filePath);
-    //public void exportGuests();
 } 

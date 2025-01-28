@@ -40,11 +40,6 @@ public class HotelRepository implements IHotelRepository {
     }
 
     @Override
-    public void addRoom(Room room) {
-        rooms.add(room);
-    }
-
-    @Override
     public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
         String sql = "INSERT INTO \"Room\" (number, price, capacity, stars, status) VALUES (?, ?, ?, ?, 'Available')";
         try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Hotel", "postgres", "12345");
@@ -57,11 +52,6 @@ public class HotelRepository implements IHotelRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public void removeRoom(int roomNumber) {
-        rooms.removeIf(room -> room.getNumber() == roomNumber);
     }
 
     public void removeRoomFromDatabase(int roomNumber) {
@@ -80,12 +70,6 @@ public class HotelRepository implements IHotelRepository {
             e.printStackTrace();
         }
     }
-
-
-    // @Override
-    // public Room getRoom(int roomNumber) {
-    //     return rooms.stream().filter(room -> room.getNumber() == roomNumber).findFirst().orElse(null);
-    // }
 
     @Override
     public Room getRoom(int roomNumber) {
@@ -145,13 +129,6 @@ public class HotelRepository implements IHotelRepository {
     }
 
 
-    
-    // @Override
-    // public List<Room> getAllRooms() {
-    //     return rooms;
-    // }
-
-
     @Override
     public List<Room> getAllRooms() {
         List<Room> rooms = new ArrayList<>();
@@ -203,14 +180,15 @@ public class HotelRepository implements IHotelRepository {
     
         return availableRooms;
     }
-
+    
+    
     @Override
     public void addService(String guestName, Service service) {
         String sql = "INSERT INTO \"Service\" (id, name, category, price, date, guest_id) " +
                     "VALUES (?, ?, ?, ?, ?, (SELECT id FROM \"Guest\" WHERE name = ?))";
 
         try (Connection connection = DatabaseConnection.getConnection()) {
-            connection.setAutoCommit(false);т
+            connection.setAutoCommit(false); // Отключаем автокоммит
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setObject(1, UUID.fromString(service.getId()));
@@ -222,33 +200,20 @@ public class HotelRepository implements IHotelRepository {
 
                 int rowsAffected = statement.executeUpdate();
                 if (rowsAffected > 0) {
-                    connection.commit();
+                    connection.commit(); // Фиксируем транзакцию
                     System.out.println("Service added for guest: " + guestName);
                 } else {
-                    connection.rollback();
+                    connection.rollback(); // Откатываем транзакцию, если гость не найден
                     System.out.println("Guest not found: " + guestName);
                 }
             } catch (SQLException e) {
-                connection.rollback();
+                connection.rollback(); // Откатываем транзакцию при ошибке
                 System.out.println("Error while adding service for guest: " + e.getMessage());
             }
         } catch (SQLException e) {
             System.out.println("Database connection error: " + e.getMessage());
         }
     }
-
- 
-    
-    @Override
-    public List<Service> getAllServices() {
-        return services;
-    }
-
-    @Override
-    public void addGuest(Guest guest) {
-        guests.add(guest);
-    }
-
 
     @Override
     public List<Service> getServicesForGuest(String guestName) {
@@ -309,29 +274,11 @@ public class HotelRepository implements IHotelRepository {
         return null;
     }
     
-
-    @Override
-    public List<Service> getGuestServicesSortedByPrice(String guestName) {
-        List<Service> services = getServicesForGuest(guestName);
-        return services.stream()
-                .sorted(Comparator.comparingDouble(Service::getPrice))
-                .collect(Collectors.toList());
-    }
-
-
-    // @Override
-    // public Guest getGuest(String name) {
-    //     return guests.stream().filter(guest -> guest.getName().equals(name)).findFirst().orElse(null);
-    // }
-
-
-
-
     @Override
     public void addStay(Stay stay) {
         String sql = "INSERT INTO \"Stay\" (id, guestid, roomid, checkindate, checkoutdate) VALUES (?, ?, ?, ?, ?)";
         try (Connection connection = DatabaseConnection.getConnection()) {
-            connection.setAutoCommit(false);
+            connection.setAutoCommit(false); // Отключаем автокоммит
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
                 statement.setObject(1, UUID.fromString(stay.getId()));
@@ -341,40 +288,16 @@ public class HotelRepository implements IHotelRepository {
                 statement.setTimestamp(5, new java.sql.Timestamp(stay.getCheckOutDate().getTime()));
 
                 statement.executeUpdate();
-                connection.commit();
+                connection.commit(); // Фиксируем транзакцию
                 System.out.println("Stay added successfully!");
             } catch (SQLException e) {
-                connection.rollback();
+                connection.rollback(); // Откатываем транзакцию при ошибке
                 System.out.println("Error while adding stay: " + e.getMessage());
             }
         } catch (SQLException e) {
             System.out.println("Database connection error: " + e.getMessage());
         }
     }
-
-
-
-    // @Override
-    // public Guest getGuestById(UUID id) {
-    //     String sql = "SELECT * FROM \"Guest\" WHERE id = ?";
-    //     try (Connection connection = DatabaseConnection.getConnection();
-    //          PreparedStatement statement = connection.prepareStatement(sql)) {
-    
-    //         statement.setObject(1, id);
-    //         ResultSet resultSet = statement.executeQuery();
-    
-    //         if (resultSet.next()) {
-    //             return new Guest(
-    //                 UUID.fromString(resultSet.getString("id")),
-    //                 resultSet.getString("name")
-    //             );
-    //         }
-    //     } catch (SQLException e) {
-    //         System.out.println("Error while fetching guest: " + e.getMessage());
-    //     }
-    //     return null;
-    // }
-    
 
     @Override
     public Room getRoomById(UUID id) {
@@ -443,14 +366,6 @@ public class HotelRepository implements IHotelRepository {
     
         return stays;
     }
-    
-
-
-
-    // @Override
-    // public List<Guest> getAllGuests() {
-    //     return guests;
-    // }
 
     @Override
     public List<Guest> getAllGuests() {
@@ -494,8 +409,6 @@ public class HotelRepository implements IHotelRepository {
     }
     
 
-
-
     @Override
     public void setStatusAv(int roomNumber) {
         String sql = "UPDATE \"Room\" SET status = 'Available' WHERE number = ?"; 
@@ -514,18 +427,5 @@ public class HotelRepository implements IHotelRepository {
         } catch (SQLException e) {
             System.out.println("Error while updating room status: " + e.getMessage());
         }
-    }
-
-
-
-    @Override
-    public List<Stay> getRoomHistory(int roomNumber) {
-        Room room = rooms.stream().filter(r -> r.getNumber() == roomNumber).findFirst().orElse(null);
-
-        if (room == null) {
-            return new ArrayList<>(); 
-        }
-
-        return room.getStays(); 
     }
 }

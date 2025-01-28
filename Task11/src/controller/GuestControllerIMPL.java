@@ -19,11 +19,6 @@ public class GuestControllerIMPL implements GuestController{
         this.hotelService = hotelService;
     }
 
-    // @Inject
-    // public GuestControllerIMPL() {
-    // }
-
-
     public void listAllGuests() {
         List<Guest> guests = hotelService.getAllGuests();
         if (guests == null || guests.isEmpty()) {
@@ -56,26 +51,5 @@ public class GuestControllerIMPL implements GuestController{
     public void getTotalPaymentForGuest(String guestName) {
         double totalPayment = hotelService.getTotalPaymentForGuest(guestName);
         System.out.println("Total payment for guest " + guestName + ": " + totalPayment);
-    }
-
-
-    public void importGuests(String filePath) {
-        try {
-            hotelService.importGuestsFromCSV(filePath);
-            System.out.println("Guests imported successfully from: " + filePath);
-        } catch (Exception e) {
-            System.out.println("Failed to import guests: " + e.getMessage());
-        }
-    }
-
-    public void exportGuests(String filePath) {
-        try {
-            hotelService.exportGuestsToCSV(filePath);
-            System.out.println("Guests exported successfully to: " + filePath);
-        } catch (Exception e) {
-            System.out.println("Failed to export guests: " + e.getMessage());
-        }
-    }
-
-    
+    }    
 }

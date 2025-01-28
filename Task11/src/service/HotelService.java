@@ -42,21 +42,10 @@ public class HotelService implements IHotelService {
 
 
 //////////////////////////////// Room ///////////////////////////////////////////
-    @Override
-    public void addRoom(Room room) {
-        hotelRepository.addRoom(room);
-        System.out.println("Room added: " + room.getNumber());
-    }
-    
+   
     @Override
     public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
         hotelRepository.addRoomToDatabase(roomNumber, price, capacity, stars);
-    }
-    
-    @Override
-    public void removeRoom(int roomNumber) {
-        hotelRepository.removeRoom(roomNumber);
-        System.out.println("Room removed: " + roomNumber);
     }
     
     @Override
@@ -91,13 +80,6 @@ public class HotelService implements IHotelService {
     public List<Room> getAllRooms() {
         return hotelRepository.getAllRooms();
     }
-
-    // @Override
-    // public List<Room> getAvailableRooms() {
-    //     return hotelRepository.getAllRooms().stream()
-    //     .filter(room -> room.getStatus().equals("Available"))
-    //     .collect(Collectors.toList());
-    // }
 
     @Override
     public List<Room> getAvailableRooms() {
@@ -167,48 +149,8 @@ public class HotelService implements IHotelService {
         return hotelRepository.getRoomFromDatabase(roomNumber);
     }
 
-    @Override
-    public List<Stay> getRoomHistory(int roomNumber) {
-        return hotelRepository.getRoomHistory(roomNumber);
-    }
-
-
 
 /////////////////////////     Check /////////////////////////////////////////////////////////////////
-
-
-    // @Override
-    // public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {
-    //     Room room = hotelRepository.getRoom(roomNumber);
-    //     if (room != null && room.getStatus().equals("available")) {
-    //         room.setStatus("occupied");
-    //         Stay stay = new Stay(guest, room, checkInDate, checkOutDate);
-    //         guest.addStay(stay);
-    //         hotelRepository.addGuest(guest);
-    //         System.out.println("Checked in to room: " + roomNumber);
-    //     } else {
-    //         System.out.println("Room not available: " + roomNumber);
-    //     }
-    // }
-
-
-
-    // @Override
-    // public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {
-    //     Room room = hotelRepository.getRoom(roomNumber);
-
-    //     if (room != null && room.getStatus().equals("Available")) {
-    //         room.setStatus("Occupied");
-    //         hotelRepository.setRoomStatus(roomNumber, "Occupied"); // Обновление статуса комнаты в базе
-
-    //         Stay stay = new Stay(guest, room, checkInDate, checkOutDate);
-    //         hotelRepository.addStay(stay); // Сохранение заселения в базу данных
-
-    //         System.out.println("Checked in to room: " + roomNumber);
-    //     } else {
-    //         System.out.println("Room not available: " + roomNumber);
-    //     }
-    // }
 
     @Override
     public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {
@@ -227,20 +169,6 @@ public class HotelService implements IHotelService {
         }
     }
 
-
-    // @Override
-    // public void checkOut(int roomNumber) {
-    //     Room room = hotelRepository.getRoom(roomNumber);
-    //     if (room != null) {
-    //         room.setStatus("Available");
-    //         System.out.println("Checked out from room: " + roomNumber);
-    //     } else {
-    //         System.out.println("Room not found: " + roomNumber);
-    //     }
-    // }
-
-
-
     @Override
     public void checkOut(int roomNumber) {
         Room room = hotelRepository.getRoom(roomNumber);
@@ -251,12 +179,6 @@ public class HotelService implements IHotelService {
             System.out.println("Room not found: " + roomNumber);
         }
     }
-
-    // @Override
-    // public void addService(String guestName, Service service) {
-    //     hotelRepository.addService(guestName, service);
-    //     System.out.println("Service added: " + service.getName());
-    // }
 
     @Override
     public void addService(String guestName, Service service) {
@@ -340,153 +262,5 @@ public class HotelService implements IHotelService {
         return guest.getServices().stream()
                 .sorted((s1, s2) -> s1.getDate().compareTo(s2.getDate()))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Service> getServicesSortedByCategoryAndPrice() {
-        return hotelRepository.getAllServices().stream()
-        .sorted((s1, s2) -> {
-            int categoryComparison = s1.getCategory().compareTo(s2.getCategory());
-            if (categoryComparison != 0) {
-                return categoryComparison;
-            }
-            return Double.compare(s1.getPrice(), s2.getPrice());
-        })
-        .collect(Collectors.toList());
-    }
-
-
-
-    @Override
-    public void importRoomsFromCSV(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            System.out.println("Начинается чтение файла: " + filePath);
-            while ((line = reader.readLine()) != null) {
-                System.out.println("Прочитана строка: " + line); // Вывод каждой строки
-                if (line.trim().isEmpty()) {
-                    System.out.println("Пропуск пустой строки");
-                    continue;
-                }
-
-                String[] parts = line.split(",");
-                System.out.println("Разбито на части: " + Arrays.toString(parts)); // Проверка разделения
-                if (parts.length != 6) {
-                    System.out.println("Ошибка: Ожидается 6 значений, но найдено " + parts.length);
-                    continue;
-                }
-
-                try {
-                    String id = parts[0].trim();
-                    int roomNumber = Integer.parseInt(parts[1].trim()); 
-                    String status = parts[2].trim(); 
-                    double price = Double.parseDouble(parts[3].trim()); 
-                    int capacity = Integer.parseInt(parts[4].trim());
-                    int stars = Integer.parseInt(parts[5].trim()); 
-                    
-                    // Создание объекта Room
-                    Room newRoom = new Room(id, roomNumber, status, price, capacity, stars);
-                    hotelRepository.addRoom(newRoom);
-                    System.out.println("Комната добавлена: " + newRoom);
-                } catch (NumberFormatException e) {
-                    System.out.println("Ошибка парсинга данных: " + line);
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения файла: " + filePath);
-            e.printStackTrace();
-        }
-    }
-
-
-
-    public void exportRoomsToCSV(String filePath) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            // Записываем заголовок
-            writer.write("id,number,status,price,capacity,stars");
-            writer.newLine();
-    
-            for (Room room : hotelRepository.getAllRooms()) {
-                // Записываем данные комнат
-                writer.write(String.format("%s,%d,%s,%.2f,%d,%d",
-                    room.getId(),
-                    room.getNumber(),
-                    room.getStatus(),
-                    room.getPrice(),
-                    room.getCapacity(),
-                    room.getStars()
-                ));
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            System.out.println("Error writing to file: " + filePath);
-            e.printStackTrace();
-        }
-    }
-    
-
-    @Override
-    public void importGuestsFromCSV(String filePath) {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            System.out.println("Начинается чтение файла: " + filePath);
-
-            while ((line = reader.readLine()) != null) {
-                System.out.println("Прочитана строка: " + line);
-                if (line.trim().isEmpty()) {
-                    System.out.println("Пропуск пустой строки");
-                    continue;
-                }
-
-                String[] parts = line.split(",");
-                System.out.println("Разбито на части: " + Arrays.toString(parts));
-                if (parts.length < 2) {
-                    System.out.println("Ошибка: Ожидается минимум 2 значения (id и name)");
-                    continue;
-                }
-
-                try {
-                    String id = parts[0].trim();
-                    String name = parts[1].trim();
-                    Guest newGuest = new Guest(name);
-                    hotelRepository.addGuest(newGuest);
-                    System.out.println("Гость добавлен: " + newGuest.getName());
-                } catch (Exception e) {
-                    System.out.println("Ошибка парсинга данных: " + line);
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Ошибка чтения файла: " + filePath);
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void exportGuestsToCSV(String filePath) {
-        List<Guest> guests = hotelRepository.getAllGuests();
-
-        if (guests == null || guests.isEmpty()) {
-            System.out.println("No guests available to export.");
-            return;
-        }
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            writer.write("id,name");
-            writer.newLine();
-
-            for (Guest guest : guests) {
-                StringBuilder csvLine = new StringBuilder();
-                csvLine.append(guest.getId()).append(",").append(guest.getName());
-                
-                writer.write(csvLine.toString());
-                writer.newLine();
-            }
-
-            System.out.println("Guests exported successfully to file: " + filePath);
-        } catch (Exception e) {
-            System.out.println("Error writing to file: " + e.getMessage());
-        }
     }
 }

@@ -57,7 +57,6 @@ public class Main {
         menuItems.add(new MenuItem("List All Rooms", new ListAllRoomsHandler(roomController)));
         menuItems.add(new MenuItem("List Available Rooms", new ListAvailableRoomsHandler(roomController)));
         menuItems.add(new MenuItem("List All Guests", new ListAllGuestsHandler(guestController)));
-        menuItems.add(new MenuItem("List Rooms Sorted By Price", new ListRoomsSortedByPriceHandler(roomController)));
         menuItems.add(new MenuItem("List Rooms Sorted By Capacity", new ListRoomsSortedByCapacityHandler(roomController)));
         menuItems.add(new MenuItem("List Rooms Sorted By Stars", new ListRoomsSortedByStarsHandler(roomController)));
         menuItems.add(new MenuItem("List Available Rooms Sorted By Price", new ListAvailableRoomsSortedByPriceHandler(roomController)));
@@ -72,13 +71,7 @@ public class Main {
         menuItems.add(new MenuItem("List Last Three Stays", new ListLastThreeStaysHandler(roomController)));
         menuItems.add(new MenuItem("List Guest Services Sorted By Price", new ListGuestServicesSortedByPriceHandler(serviceController)));
         menuItems.add(new MenuItem("List Guest Services Sorted By Date", new ListGuestServicesSortedByDateHandler(serviceController)));
-        menuItems.add(new MenuItem("List Services Sorted By Category And Price", new ListServicesSortedByCategoryAndPriceHandler(serviceController)));
         menuItems.add(new MenuItem("Get Room Details", new GetRoomDetailsHandler(roomController)));
-        menuItems.add(new MenuItem("Import Rooms", new ImportRoomsHandler(roomController)));
-        menuItems.add(new MenuItem("Export Rooms", new ExportRoomsHandler(roomController)));
-        menuItems.add(new MenuItem("Import Guests", new ImportGuestHandler(guestController)));
-        menuItems.add(new MenuItem("Export Guests", new ExportGuestHandler(guestController)));
-        menuItems.add(new MenuItem("List Room History", new ListRoomHistoryHandler(roomController)));
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> PersistenceService.saveState(roomsRef.get())));
 

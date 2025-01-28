@@ -31,10 +31,4 @@ public class ServiceControllerIMPL implements ServiceController{
             System.out.println("Service: " + service.getName() + ", Date: " + service.getDate());
         }
     }
-
-    public void listServicesSortedByCategoryAndPrice() {
-        for (Service service : hotelService.getServicesSortedByCategoryAndPrice()) {
-            System.out.println("Service: " + service.getName() + ", Category: " + service.getCategory() + ", Price: " + service.getPrice()  + ", Id: " + service.getId());
-        }
-    }
 }

@@ -34,15 +34,6 @@ public class ServiceControllerProxy implements ServiceController{
             System.out.println("404");
         }
     }
-
-    public void listServicesSortedByCategoryAndPrice() {
-        try {
-            serviceController.listServicesSortedByCategoryAndPrice();
-        } catch (Exception e) {
-            System.out.println("404");
-        }
-    }
-
 }
     
 

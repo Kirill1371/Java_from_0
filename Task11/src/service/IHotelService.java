@@ -14,9 +14,7 @@ public interface IHotelService {
     void checkOut(int roomNumber);
     void setRoomStatus(int roomNumber, String status);
     void setRoomPrice(int roomNumber, double price);
-    void addRoom(Room room);
     void addRoomToDatabase(int roomNumber, double price, int capacity, int stars);
-    void removeRoom(int roomNumber);
     void removeRoomFromDatabase(int roomNumber);
     void addService(String guestname, Service service);
     List<Room> getAllRooms();
@@ -37,14 +35,7 @@ public interface IHotelService {
     List<Stay> getLastThreeStays(int roomNumber);
     List<Service> getGuestServicesSortedByPrice(String guestName);
     List<Service> getGuestServicesSortedByDate(String guestName);
-    List<Service> getServicesSortedByCategoryAndPrice();
     Room getRoomDetails(int roomNumber);
-    List<Stay> getRoomHistory(int roomNumber);
-
-    void importRoomsFromCSV(String filePath);
-    void exportRoomsToCSV(String filePath);
-    void importGuestsFromCSV(String filePath);
-    void exportGuestsToCSV(String filePath);
 }
 
 
