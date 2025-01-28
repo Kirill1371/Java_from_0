@@ -7,14 +7,16 @@ import model.Stay;
 import java.util.Date;
 import java.util.List;
 
+import annotations.Component;
+
 public interface IHotelService {
     void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate);
     void checkOut(int roomNumber);
     void setRoomStatus(int roomNumber, String status);
     void setRoomPrice(int roomNumber, double price);
-    void addRoom(Room room);
-    void removeRoom(int roomNumber);
-    void addService(Service service);
+    void addRoomToDatabase(int roomNumber, double price, int capacity, int stars);
+    void removeRoomFromDatabase(int roomNumber);
+    void addService(String guestname, Service service);
     List<Room> getAllRooms();
     List<Room> getAvailableRooms();
     List<Guest> getAllGuests();
@@ -33,13 +35,7 @@ public interface IHotelService {
     List<Stay> getLastThreeStays(int roomNumber);
     List<Service> getGuestServicesSortedByPrice(String guestName);
     List<Service> getGuestServicesSortedByDate(String guestName);
-    List<Service> getServicesSortedByCategoryAndPrice();
     Room getRoomDetails(int roomNumber);
-
-    void importRoomsFromCSV(String filePath);
-    void exportRoomsToCSV(String filePath);
-    void importGuestsFromCSV(String filePath);
-    void exportGuestsToCSV(String filePath);
 }
 
 

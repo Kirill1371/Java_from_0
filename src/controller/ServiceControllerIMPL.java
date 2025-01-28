@@ -1,18 +1,23 @@
 package controller;
 
+import annotations.Inject1;
+
+import annotations.Component;
 import model.Service;
-import service.IHotelService;
+import service.HotelService;
 
+@Component
 public class ServiceControllerIMPL implements ServiceController{
+    @Inject1
+    private HotelService hotelService;
 
-    private IHotelService hotelService;
-
-    public ServiceControllerIMPL(IHotelService hotelService) {
+    @Inject1
+    public ServiceControllerIMPL(HotelService hotelService) {
         this.hotelService = hotelService;
     }
 
-    public void addService(Service service) {
-        hotelService.addService(service);
+    public void addService(String guestName, Service service) {
+        hotelService.addService(guestName, service);
     }
 
     public void listGuestServicesSortedByPrice(String guestName) {
@@ -24,12 +29,6 @@ public class ServiceControllerIMPL implements ServiceController{
     public void listGuestServicesSortedByDate(String guestName) {
         for (Service service : hotelService.getGuestServicesSortedByDate(guestName)) {
             System.out.println("Service: " + service.getName() + ", Date: " + service.getDate());
-        }
-    }
-
-    public void listServicesSortedByCategoryAndPrice() {
-        for (Service service : hotelService.getServicesSortedByCategoryAndPrice()) {
-            System.out.println("Service: " + service.getName() + ", Category: " + service.getCategory() + ", Price: " + service.getPrice()  + ", Id: " + service.getId());
         }
     }
 }

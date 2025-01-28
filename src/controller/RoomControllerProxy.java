@@ -10,18 +10,20 @@ public class RoomControllerProxy implements RoomController {
         this.roomController = roomController;
     }
 
-    public void addRoom(Room room) {
+    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
+
         try {
-            roomController.addRoom(room);
+            roomController.addRoomToDatabase(roomNumber, price, capacity, stars);
         } catch(Exception e) {
             System.out.println("404");
         }
+       
     }
 
-    public void removeRoom(int roomNumber) {
+    public void removeRoomFromDatabase(int roomNumber) {
         try {
-            roomController.removeRoom(roomNumber);
-        } catch (Exception e) {
+            roomController.removeRoomFromDatabase(roomNumber);
+        } catch(Exception e) {
             System.out.println("404");
         }
     }
@@ -123,6 +125,14 @@ public class RoomControllerProxy implements RoomController {
         }
     }
 
+    public void getRoomDetailsFromDB(int roomNumber) {
+        try {
+            roomController.getRoomDetails(roomNumber);
+        } catch (Exception e) {
+            System.out.println("404");
+        }
+    }
+
     public void getTotalAvailableRooms() {
         try {
             roomController.getTotalAvailableRooms();
@@ -134,22 +144,6 @@ public class RoomControllerProxy implements RoomController {
     public void listLastThreeStays(int roomNumber) {
         try {
             roomController.listLastThreeStays(roomNumber);
-        } catch (Exception e) {
-            System.out.println("404");
-        }
-    }
-
-    public void importRooms(String filePath) {
-        try {
-            roomController.importRooms(filePath);
-        } catch (Exception e) {
-            System.out.println("404");
-        }
-    }
-
-    public void exportRooms(String filePath) {
-        try {
-            roomController.exportRooms(filePath);
         } catch (Exception e) {
             System.out.println("404");
         }

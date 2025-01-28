@@ -11,9 +11,9 @@ public class ServiceControllerProxy implements ServiceController{
     }
     
     
-    public void addService(Service service) {
+    public void addService(String guestName, Service service) {
         try {
-            serviceController.addService(service);
+            serviceController.addService(guestName, service);
         } catch (Exception e) {
             System.out.println("404");
         }
@@ -34,15 +34,6 @@ public class ServiceControllerProxy implements ServiceController{
             System.out.println("404");
         }
     }
-
-    public void listServicesSortedByCategoryAndPrice() {
-        try {
-            serviceController.listServicesSortedByCategoryAndPrice();
-        } catch (Exception e) {
-            System.out.println("404");
-        }
-    }
-
 }
     
 

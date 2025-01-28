@@ -2,13 +2,20 @@ package controller;
 
 import java.util.List;
 
+import annotations.Component;
+import annotations.Inject1;
 import model.Guest;
+import service.HotelService;
 import service.IHotelService;
 
-public class GuestControllerIMPL implements GuestContrloller{
-    private IHotelService hotelService;
 
-    public GuestControllerIMPL(IHotelService hotelService) {
+@Component
+public class GuestControllerIMPL implements GuestController{
+    @Inject1
+    private HotelService hotelService;
+
+    @Inject1
+    public GuestControllerIMPL(HotelService hotelService) {
         this.hotelService = hotelService;
     }
 
@@ -44,26 +51,5 @@ public class GuestControllerIMPL implements GuestContrloller{
     public void getTotalPaymentForGuest(String guestName) {
         double totalPayment = hotelService.getTotalPaymentForGuest(guestName);
         System.out.println("Total payment for guest " + guestName + ": " + totalPayment);
-    }
-
-
-    public void importGuests(String filePath) {
-        try {
-            hotelService.importGuestsFromCSV(filePath);
-            System.out.println("Guests imported successfully from: " + filePath);
-        } catch (Exception e) {
-            System.out.println("Failed to import guests: " + e.getMessage());
-        }
-    }
-
-    public void exportGuests(String filePath) {
-        try {
-            hotelService.exportGuestsToCSV(filePath);
-            System.out.println("Guests exported successfully to: " + filePath);
-        } catch (Exception e) {
-            System.out.println("Failed to export guests: " + e.getMessage());
-        }
-    }
-
-    
+    }    
 }

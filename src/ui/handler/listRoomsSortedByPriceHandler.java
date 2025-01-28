@@ -4,11 +4,11 @@ import java.util.Scanner;
 
 import controller.RoomControllerIMPL;
 
-public class listRoomsSortedByPriceHandler implements CommandHandler {
+public class ListRoomsSortedByPriceHandler implements CommandHandler {
 
     private final RoomControllerIMPL roomController;
 
-    public listRoomsSortedByPriceHandler(RoomControllerIMPL roomController) {
+    public ListRoomsSortedByPriceHandler(RoomControllerIMPL roomController) {
         this.roomController = roomController;
     }
 

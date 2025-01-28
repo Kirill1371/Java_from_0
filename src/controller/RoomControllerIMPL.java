@@ -1,29 +1,44 @@
 package controller;
 
 import java.util.Date;
+import java.util.List;
 
+import annotations.Inject1;
+
+import annotations.Component;
 import model.Room;
 import model.Stay;
+import service.HotelService;
 import service.IHotelService;
 
-public class RoomControllerIMPL implements HotelController{
-    private IHotelService hotelService;
+@Component
+public class RoomControllerIMPL implements RoomController {
+    @Inject1
+    private HotelService hotelService;
 
-
-    public RoomControllerIMPL(IHotelService hotelService) {
+    @Inject1
+    public RoomControllerIMPL(HotelService hotelService) {
         this.hotelService = hotelService;
     }
 
-    public void addRoom(Room room) {
-        hotelService.addRoom(room);
+    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
+        hotelService.addRoomToDatabase(roomNumber, price, capacity, stars);
     }
 
-    public void removeRoom(int roomNumber) {
-        hotelService.removeRoom(roomNumber);
+    public void removeRoomFromDatabase(int roomNumber) {
+        hotelService.removeRoomFromDatabase(roomNumber);
     }
 
     public void setRoomStatus(int roomNumber, String status) {
+        boolean isStatusChangeEnabled = utils.ConfigManager.getBooleanProperty("room.status.change.enabled", false);
+
+        if (!isStatusChangeEnabled) {
+            System.out.println("Changing room status is disabled by configuration.");
+            return;
+        }
+
         hotelService.setRoomStatus(roomNumber, status);
+        System.out.println("Room status updated to: " + status);
     }
 
     public void setRoomPrice(int roomNumber, double price) {
@@ -37,10 +52,18 @@ public class RoomControllerIMPL implements HotelController{
     }
 
     public void listAvailableRooms() {
-        for (Room room : hotelService.getAvailableRooms()) {
-            System.out.println("Room: " + room.getNumber() + ", Status: " + room.getStatus() + ", Price: " + room.getPrice());
+        List<Room> availableRooms = hotelService.getAvailableRooms();
+        if (availableRooms.isEmpty()) {
+            System.out.println("No available rooms found.");
+        } else {
+            for (Room room : availableRooms) {
+                System.out.println("Room: " + room.getNumber() +
+                                ", Status: " + room.getStatus() +
+                                ", Price: " + room.getPrice());
+            }
         }
     }
+
 
     
     public void listRoomsSortedByPrice() {
@@ -100,18 +123,29 @@ public class RoomControllerIMPL implements HotelController{
         }
     }
 
+
+    public void getRoomDetailsFromDB(int roomNumber) {
+        Room room = hotelService.getRoomDetails(roomNumber);
+    
+        if (room != null) {
+            // Выводим информацию о комнате
+            System.out.println("Room Details:");
+            System.out.println("Number: " + room.getNumber());
+            System.out.println("Price: $" + room.getPrice());
+            System.out.println("Capacity: " + room.getCapacity() + " people");
+            System.out.println("Stars: " + room.getStars() + " stars");
+            System.out.println("Status: " + room.getStatus());
+        } else {
+            System.out.println("No room found with number: " + roomNumber);
+        }
+    }
+    
+
+
     public void listLastThreeStays(int roomNumber) {
         for (Stay stay : hotelService.getLastThreeStays(roomNumber)) {
             System.out.println("Room: " + stay.getRoom().getNumber() + ", Check-in: " + stay.getCheckInDate() + ", Check-out: " + stay.getCheckOutDate());
         }
-    }
-
-    public void importRooms(String filePath) {
-        hotelService.importRoomsFromCSV(filePath);
-    }
-    
-    public void exportRooms(String filePath) {
-        hotelService.exportRoomsToCSV(filePath);
     }
 }
 
