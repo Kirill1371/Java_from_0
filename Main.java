@@ -57,7 +57,6 @@ public class Main {
         menuItems.add(new MenuItem("List All Rooms", new ListAllRoomsHandler(roomController)));
         menuItems.add(new MenuItem("List Available Rooms", new ListAvailableRoomsHandler(roomController)));
         menuItems.add(new MenuItem("List All Guests", new ListAllGuestsHandler(guestController)));
-        menuItems.add(new MenuItem("List Rooms Sorted By Price", new ListRoomsSortedByPriceHandler(roomController)));
         menuItems.add(new MenuItem("List Rooms Sorted By Capacity", new ListRoomsSortedByCapacityHandler(roomController)));
         menuItems.add(new MenuItem("List Rooms Sorted By Stars", new ListRoomsSortedByStarsHandler(roomController)));
         menuItems.add(new MenuItem("List Available Rooms Sorted By Price", new ListAvailableRoomsSortedByPriceHandler(roomController)));
