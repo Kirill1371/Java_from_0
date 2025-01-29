@@ -5,17 +5,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import config.ConfigProperty;
+import config.ConfigProperty1;
 
 public class Room implements Serializable{
     private static final long serialVersionUID = 1L;
     private UUID id;
     private int number;
-    @ConfigProperty(propertyName = "room.defaultStatus")
+    @ConfigProperty1(propertyName = "room.defaultStatus")
     private String status;
-    @ConfigProperty(propertyName = "room.defaultPrice", type = double.class)
+    @ConfigProperty1(propertyName = "room.defaultPrice", type = double.class)
     private double price;
-    @ConfigProperty(propertyName = "room.defaultCapacity", type = int.class)
+    @ConfigProperty1(propertyName = "room.defaultCapacity", type = int.class)
     private int capacity;
     private int stars;
     private List<Stay> stays;

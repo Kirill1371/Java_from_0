@@ -14,10 +14,6 @@ public class CheckControllerIMPL implements CheckController{
     @Inject1
     private HotelService hotelService;
 
-    // public CheckControllerIMPL() {
-    //     // Конструктор по умолчанию
-    // }
-
     @Inject1
     public CheckControllerIMPL(HotelService hotelService) {
         this.hotelService = hotelService;

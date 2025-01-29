@@ -13,8 +13,8 @@ public class Configurator {
         Field[] fields = clazz.getDeclaredFields();
 
         for (Field field : fields) {
-            if (field.isAnnotationPresent(ConfigProperty.class)) {
-                ConfigProperty annotation = field.getAnnotation(ConfigProperty.class);
+            if (field.isAnnotationPresent(ConfigProperty1.class)) {
+                ConfigProperty1 annotation = field.getAnnotation(ConfigProperty1.class);
                 String configFileName = annotation.configFileName();
                 String propertyName = annotation.propertyName();
                 if (propertyName.isEmpty()) {
@@ -42,7 +42,7 @@ public class Configurator {
 
     private static Properties loadProperties(String configFileName) {
         Properties properties = new Properties();
-        try (InputStream input = new FileInputStream("X:/SENLA/Hotel/config.properties")) {
+        try (InputStream input = new FileInputStream("X:/SENLA/Hotel/src/resources/database/database.properties")) {
             if (input == null) {
                 throw new RuntimeException("Configuration file not found at specified path");
             }

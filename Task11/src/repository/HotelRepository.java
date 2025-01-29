@@ -26,23 +26,17 @@ import annotations.Component;
 @Component  
 public class HotelRepository implements IHotelRepository {
 
-    private List<Room> rooms;
-
-    private List<Service> services;
-
-    private List<Guest> guests;
+    private final DatabaseConnection databaseConnection;
 
     @Inject1
-    public HotelRepository() {
-        rooms = new ArrayList<>();
-        services = new ArrayList<>();
-        guests = new ArrayList<>();
+    public HotelRepository(DatabaseConnection databaseConnection) {
+        this.databaseConnection = databaseConnection;
     }
 
     @Override
     public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
         String sql = "INSERT INTO \"Room\" (number, price, capacity, stars, status) VALUES (?, ?, ?, ?, 'Available')";
-        try (Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/Hotel", "postgres", "12345");
+        try (Connection connection = databaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, roomNumber);
             statement.setDouble(2, price);
@@ -56,7 +50,7 @@ public class HotelRepository implements IHotelRepository {
 
     public void removeRoomFromDatabase(int roomNumber) {
         String sql = "DELETE FROM \"Room\" WHERE number = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, roomNumber);
 
@@ -75,7 +69,7 @@ public class HotelRepository implements IHotelRepository {
     public Room getRoom(int roomNumber) {
         String sql = "SELECT * FROM \"Room\" WHERE number = ?"; 
 
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, roomNumber);
@@ -104,7 +98,7 @@ public class HotelRepository implements IHotelRepository {
         String sql = "SELECT * FROM \"Room\" WHERE number = ?";
         Room room = null;
 
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, roomNumber);
@@ -134,7 +128,7 @@ public class HotelRepository implements IHotelRepository {
         List<Room> rooms = new ArrayList<>();
         String sql = "SELECT * FROM \"Room\"";
 
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sql)) {
 
@@ -160,7 +154,7 @@ public class HotelRepository implements IHotelRepository {
         List<Room> availableRooms = new ArrayList<>();
         String sql = "SELECT * FROM \"Room\" WHERE \"status\" = 'available'";
     
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(sql);
              ResultSet resultSet = preparedStatement.executeQuery()) {
     
@@ -187,7 +181,7 @@ public class HotelRepository implements IHotelRepository {
         String sql = "INSERT INTO \"Service\" (id, name, category, price, date, guest_id) " +
                     "VALUES (?, ?, ?, ?, ?, (SELECT id FROM \"Guest\" WHERE name = ?))";
 
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        try (Connection connection = databaseConnection.getConnection()) {
             connection.setAutoCommit(false); // Отключаем автокоммит
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -221,7 +215,7 @@ public class HotelRepository implements IHotelRepository {
         String getGuestIdSql = "SELECT id FROM \"Guest\" WHERE name = ?";
         String getServicesSql = "SELECT name, category, price, date FROM \"Service\" WHERE guest_id = ?";
     
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
              PreparedStatement getGuestIdStmt = connection.prepareStatement(getGuestIdSql);
              PreparedStatement getServicesStmt = connection.prepareStatement(getServicesSql)) {
     
@@ -256,7 +250,7 @@ public class HotelRepository implements IHotelRepository {
     @Override
     public Guest getGuest(String name) {
         String sql = "SELECT * FROM \"Guest\" WHERE name = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
     
             statement.setString(1, name);
@@ -277,7 +271,7 @@ public class HotelRepository implements IHotelRepository {
     @Override
     public void addStay(Stay stay) {
         String sql = "INSERT INTO \"Stay\" (id, guestid, roomid, checkindate, checkoutdate) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = DatabaseConnection.getConnection()) {
+        try (Connection connection = databaseConnection.getConnection()) {
             connection.setAutoCommit(false); // Отключаем автокоммит
 
             try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -302,7 +296,7 @@ public class HotelRepository implements IHotelRepository {
     @Override
     public Room getRoomById(UUID id) {
         String sql = "SELECT * FROM \"Room\" WHERE id = ?";
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setObject(1, id);
@@ -334,7 +328,7 @@ public class HotelRepository implements IHotelRepository {
                      "JOIN \"Guest\" g ON s.guest_id = g.id " +
                      "JOIN \"Room\" r ON s.room_id = r.id";
     
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
     
@@ -372,7 +366,7 @@ public class HotelRepository implements IHotelRepository {
         List<Guest> guests = new ArrayList<>();
         String sql = "SELECT name FROM \"Guest\"";
     
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
     
@@ -391,7 +385,7 @@ public class HotelRepository implements IHotelRepository {
     public void updateRoomStatus(int roomNumber, String newStatus) {
         String sql = "UPDATE \"Room\" SET status = ? WHERE number = ?";
     
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql)) {
     
             statement.setString(1, newStatus);
@@ -413,7 +407,7 @@ public class HotelRepository implements IHotelRepository {
     public void setStatusAv(int roomNumber) {
         String sql = "UPDATE \"Room\" SET status = 'Available' WHERE number = ?"; 
 
-        try (Connection connection = DatabaseConnection.getConnection();
+        try (Connection connection = databaseConnection.getConnection();
             PreparedStatement statement = connection.prepareStatement(sql)) {
 
             statement.setInt(1, roomNumber); 
