@@ -1,26 +1,24 @@
 package resources.database;
 
 import config.Configurator;
+import annotations.Component;
+import annotations.Inject1;
+import config.Value;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import annotations.Component;
-import annotations.Inject1;
-import config.ConfigProperty1;
-
-@ConfigProperty1(configFileName = "database.properties")
 @Component
 public class DatabaseConnection {
     
-    @ConfigProperty1(propertyName = "db.url")
+    @Value(propertyName = "db.url")
     private String url;
     
-    @ConfigProperty1(propertyName = "db.user")
+    @Value(propertyName = "db.user")
     private String user;
     
-    @ConfigProperty1(propertyName = "db.password")
+    @Value(propertyName = "db.password")
     private String password;
     
     @Inject1
