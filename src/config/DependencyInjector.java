@@ -1,7 +1,7 @@
 package config;
 
 import annotations.Component;
-import annotations.Inject1;
+import annotations.Inject;
 
 import org.reflections.Reflections;
 import java.lang.reflect.Constructor;
@@ -15,13 +15,21 @@ public class DependencyInjector {
     private static final Map<Class<?>, Object> dependencies = new HashMap<>();
     private static final Map<String, Object> Ndependencies = new HashMap<>();
 
-        public DependencyInjector(String[] pack) {
-            for (int i = 0; i< pack.length; i++) {
-                scanAndRegisterComponents(pack[i]);
-            }
+
+    public DependencyInjector(String... basePackages) {
+        for (String basePackage : basePackages) {
+            scanAndRegisterComponents(basePackage);
             dependencies.forEach((key, value) -> System.out.println("Класс: " + key.getName()));
             Ndependencies.forEach((key, value) -> System.out.println("Именованный бин: " + key + ", Экземпляр: " + value));
         }
+    }
+//    public DependencyInjector(String[] pack) {
+//        for (int i = 0; i< pack.length; i++) {
+//            scanAndRegisterComponents(pack[i]);
+//        }
+//        dependencies.forEach((key, value) -> System.out.println("Класс: " + key.getName()));
+//        Ndependencies.forEach((key, value) -> System.out.println("Именованный бин: " + key + ", Экземпляр: " + value));
+//    }
 
     public void scanAndRegisterComponents(String basePackage) {
         Reflections reflections = new Reflections(basePackage);
@@ -57,13 +65,25 @@ public class DependencyInjector {
             // constructor.getAnnotations()[0].toString();
             // System.out.println(constructor.getAnnotations()[0].annotationType());
             // System.out.println(Inject1.class.getName());
-            if (constructor.isAnnotationPresent(Inject1.class)) {
+            if (constructor.isAnnotationPresent(Inject.class)) {
                 System.out.println("Creating instance with dependencies for: " + clazz.getName());
                 return createInstanceWithDependencies(constructor);
             }
         }
 
-        throw new RuntimeException("No suitable constructor found for: " + clazz.getName());
+
+
+
+        try {
+            Object instance = clazz.getDeclaredConstructor().newInstance();
+            dependencies.put(clazz, instance);
+            injectDependencies(instance); // Инжектим зависимости в поля
+            return instance;
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException("No suitable constructor found for: " + clazz.getName());
+        }
+
+        //throw new RuntimeException("No suitable constructor found for: " + clazz.getName());
     }
     
     
@@ -78,7 +98,7 @@ public class DependencyInjector {
     private static void injectDependencies(Object instance) {
         Field[] fields = instance.getClass().getDeclaredFields();
         for (Field field : fields) {
-            if (field.isAnnotationPresent(Inject1.class)) {
+            if (field.isAnnotationPresent(Inject.class)) {
                 try {
                     field.setAccessible(true);
                     Class<?> fieldType = field.getType();

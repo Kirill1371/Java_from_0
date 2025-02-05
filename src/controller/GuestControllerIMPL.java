@@ -3,18 +3,17 @@ package controller;
 import java.util.List;
 
 import annotations.Component;
-import annotations.Inject1;
+import annotations.Inject;
 import model.Guest;
 import service.HotelService;
-import service.IHotelService;
 
 
 @Component
 public class GuestControllerIMPL implements GuestController{
-    @Inject1
+    @Inject
     private HotelService hotelService;
 
-    @Inject1
+    @Inject
     public GuestControllerIMPL(HotelService hotelService) {
         this.hotelService = hotelService;
     }

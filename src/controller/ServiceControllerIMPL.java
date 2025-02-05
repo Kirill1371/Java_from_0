@@ -1,6 +1,6 @@
 package controller;
 
-import annotations.Inject1;
+import annotations.Inject;
 
 import annotations.Component;
 import model.Service;
@@ -8,10 +8,10 @@ import service.HotelService;
 
 @Component
 public class ServiceControllerIMPL implements ServiceController{
-    @Inject1
+    @Inject
     private HotelService hotelService;
 
-    @Inject1
+    @Inject
     public ServiceControllerIMPL(HotelService hotelService) {
         this.hotelService = hotelService;
     }

@@ -9,7 +9,6 @@ import ui.ConsoleUI;
 import ui.MenuItem;
 import ui.handler.*;
 
-import resources.*;
 import resources.database.DatabaseConnection;
 
 import java.sql.Connection;
@@ -22,8 +21,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public class Main {
     public static void main(String[] args) {
 
-        DependencyInjector injector = new DependencyInjector(new String[] {"repository", "service", "controller", "ui.handler"});
+        DependencyInjector injector = new DependencyInjector("resources.database", "repository", "service", "controller", "ui.handler");
 
+        DatabaseConnection databaseConnection = injector.getBean(DatabaseConnection.class);
         CheckControllerIMPL checkController = injector.getBean(CheckControllerIMPL.class);
         GuestControllerIMPL guestController = injector.getBean(GuestControllerIMPL.class);
         RoomControllerIMPL roomController = injector.getBean(RoomControllerIMPL.class);
@@ -38,7 +38,7 @@ public class Main {
 
         try {
             System.out.println("Calling DatabaseConnection.getConnection()...");
-            Connection connection = DatabaseConnection.getConnection();
+            Connection connection = databaseConnection.getConnection();
             System.out.println("Connection successful!");
             connection.close();
         } catch (SQLException e) {

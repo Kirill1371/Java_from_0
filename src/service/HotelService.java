@@ -5,27 +5,21 @@ import model.Service;
 import model.Guest;
 import model.Stay;
 import repository.HotelRepository;
-import repository.IHotelRepository;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
 
 import annotations.Component;
-import annotations.Inject1;
+import annotations.Inject;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 
 @Component
 public class HotelService implements IHotelService {
-    @Inject1
+    @Inject
     private HotelRepository hotelRepository;
 
     private List<Room> rooms;
@@ -34,7 +28,7 @@ public class HotelService implements IHotelService {
         return rooms;
     }
 
-    @Inject1
+    @Inject
     public HotelService(HotelRepository hotelRepository) {
         this.hotelRepository = hotelRepository;
         this.rooms = new ArrayList<>();

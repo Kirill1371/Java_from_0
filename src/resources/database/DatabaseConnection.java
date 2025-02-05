@@ -1,5 +1,8 @@
 package resources.database;
 
+import annotations.Component;
+import annotations.Inject;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
@@ -7,19 +10,20 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+@Component
 public class DatabaseConnection {
-    private static final String PROPERTIES_FILE = "src/resources/database/database.properties";
+    private final Properties properties = new Properties();
 
-    public static Connection getConnection() throws SQLException {
-        Properties properties = new Properties();
-
-        try (FileInputStream input = new FileInputStream(PROPERTIES_FILE)) {
+    @Inject
+    public DatabaseConnection() {
+        try (FileInputStream input = new FileInputStream("src/resources/database/database.properties")) {
             properties.load(input);
         } catch (IOException e) {
-            System.err.println("Error loading database properties file: " + e.getMessage());
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error loading database properties file", e);
         }
+    }
 
+    public Connection getConnection() throws SQLException {
         String url = properties.getProperty("db.url");
         String user = properties.getProperty("db.user");
         String password = properties.getProperty("db.password");

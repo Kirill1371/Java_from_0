@@ -8,5 +8,5 @@ import java.lang.annotation.Target;
 // Аннотация для пометки конструктора или метода для инъекции зависимостей
 @Target({ ElementType.CONSTRUCTOR, ElementType.FIELD, ElementType.METHOD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Inject1 {
+public @interface Inject {
 }

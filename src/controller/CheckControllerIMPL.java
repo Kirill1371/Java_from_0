@@ -1,28 +1,15 @@
 package controller;
 
 import java.util.Date;
-
-import annotations.Inject1;
-
+import annotations.Inject;
 import annotations.Component;
 import model.Guest;
 import service.HotelService;
-import service.IHotelService;
 
 @Component
-public class CheckControllerIMPL implements CheckController{
-    @Inject1
-    private HotelService hotelService;
-
-    // public CheckControllerIMPL() {
-    //     // Конструктор по умолчанию
-    // }
-
-    @Inject1
-    public CheckControllerIMPL(HotelService hotelService) {
-        this.hotelService = hotelService;
-    }
-
+public class CheckControllerIMPL implements CheckController {
+    @Inject
+    private HotelService hotelService; // Поле будет автоматически заполнено DI-контейнером
 
     public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {
         hotelService.checkIn(roomNumber, guest, checkInDate, checkOutDate);
@@ -32,3 +19,35 @@ public class CheckControllerIMPL implements CheckController{
         hotelService.checkOut(roomNumber);
     }
 }
+
+
+//package controller;
+//
+//import java.util.Date;
+//
+//import annotations.Inject1;
+//
+//import annotations.Component;
+//import model.Guest;
+//import service.HotelService;
+//import service.IHotelService;
+//
+//@Component
+//public class CheckControllerIMPL implements CheckController{
+//    @Inject1
+//    private HotelService hotelService;
+//
+//    @Inject1
+//    public CheckControllerIMPL(HotelService hotelService) {
+//        this.hotelService = hotelService;
+//    }
+//
+//
+//    public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {
+//        hotelService.checkIn(roomNumber, guest, checkInDate, checkOutDate);
+//    }
+//
+//    public void checkOut(int roomNumber) {
+//        hotelService.checkOut(roomNumber);
+//    }
+//}

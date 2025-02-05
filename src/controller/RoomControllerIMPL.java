@@ -3,20 +3,19 @@ package controller;
 import java.util.Date;
 import java.util.List;
 
-import annotations.Inject1;
+import annotations.Inject;
 
 import annotations.Component;
 import model.Room;
 import model.Stay;
 import service.HotelService;
-import service.IHotelService;
 
 @Component
 public class RoomControllerIMPL implements RoomController {
-    @Inject1
+    @Inject
     private HotelService hotelService;
 
-    @Inject1
+    @Inject
     public RoomControllerIMPL(HotelService hotelService) {
         this.hotelService = hotelService;
     }
