@@ -27,7 +27,7 @@ public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
     public static void main(String[] args) {
 
-        DependencyInjector injector = new DependencyInjector("com.test.resources.database", "com.test.repository", "com.test.service", "com.test.controller", "com.test.ui.handler");
+        DependencyInjector injector = new DependencyInjector("com.test.resources.database", "com.test.moedel", "com.test.repository", "com.test.service", "com.test.controller", "com.test.ui.handler");
 
         DatabaseConnection databaseConnection = injector.getBean(DatabaseConnection.class);
         CheckControllerIMPL checkController = injector.getBean(CheckControllerIMPL.class);
