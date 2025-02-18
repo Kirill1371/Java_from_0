@@ -1,0 +1,130 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: kirill
+      changes:
+        - createTable:
+            tableName: Room
+            schemaName: public
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    defaultValueComputed: "gen_random_uuid()"
+              - column:
+                  name: number
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: capacity
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: stars
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: Guest
+            schemaName: public
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    defaultValueComputed: "gen_random_uuid()"
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+        - createTable:
+            tableName: Service
+            schemaName: public
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    defaultValueComputed: "gen_random_uuid()"
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: price
+                  type: DOUBLE PRECISION
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: date
+                  type: TIMESTAMP
+                  constraints:
+                    defaultValueComputed: "CURRENT_TIMESTAMP"
+
+        - createTable:
+            tableName: Stay
+            schemaName: public
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    defaultValueComputed: "gen_random_uuid()"
+              - column:
+                  name: guestId
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: roomId
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: checkInDate
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: checkOutDate
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - foreignKeyConstraint:
+                  baseColumnNames: guestId
+                  baseTableName: stay
+                  referencedTableName: guest
+                  referencedColumnNames: id
+                  onDelete: CASCADE
+              - foreignKeyConstraint:
+                  baseColumnNames: roomId
+                  baseTableName: stay
+                  referencedTableName: room
+                  referencedColumnNames: id
+                  onDelete: CASCADE
