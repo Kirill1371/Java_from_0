@@ -146,6 +146,24 @@ public class HotelService implements IHotelService {
 
 /////////////////////////     Check /////////////////////////////////////////////////////////////////
 
+//    @Override
+//    public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {
+//        Room room = hotelRepository.getRoom(roomNumber);
+//
+//        if (room != null && room.getStatus().equalsIgnoreCase("Available")) {
+//            room.setStatus("Occupied");
+//            hotelRepository.updateRoomStatus(roomNumber, "Occupied");
+//
+//            Stay stay = new Stay(guest, room, checkInDate, checkOutDate);
+//            hotelRepository.addStay(stay); // Сохранение заселения в базу данных
+//
+//            System.out.println("Checked in to room: " + roomNumber);
+//        } else {
+//            System.out.println("Room not available: " + roomNumber);
+//        }
+//    }
+
+
     @Override
     public void checkIn(int roomNumber, Guest guest, Date checkInDate, Date checkOutDate) {
         Room room = hotelRepository.getRoom(roomNumber);
@@ -153,6 +171,14 @@ public class HotelService implements IHotelService {
         if (room != null && room.getStatus().equalsIgnoreCase("Available")) {
             room.setStatus("Occupied");
             hotelRepository.updateRoomStatus(roomNumber, "Occupied");
+
+            // Проверяем, существует ли гость в базе данных, если нет — сохраняем его
+            Guest existingGuest = hotelRepository.getGuestByName(guest.getName());
+            if (existingGuest == null) {
+                hotelRepository.addGuest(guest); // Сохраняем гостя перед заселением
+            } else {
+                guest = existingGuest; // Используем уже существующего гостя
+            }
 
             Stay stay = new Stay(guest, room, checkInDate, checkOutDate);
             hotelRepository.addStay(stay); // Сохранение заселения в базу данных
@@ -162,6 +188,7 @@ public class HotelService implements IHotelService {
             System.out.println("Room not available: " + roomNumber);
         }
     }
+
 
     @Override
     public void checkOut(int roomNumber) {

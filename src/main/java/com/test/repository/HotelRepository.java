@@ -12,16 +12,26 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.test.annotations.Inject;
 import com.test.annotations.Component;
+import com.test.resources.database.HibernateUtil;
+import org.hibernate.query.Query;
 
 
-@Component  
+@Component
 public class HotelRepository implements IHotelRepository {
 
+    private static final Logger logger = LogManager.getLogger(RoomRepository.class);
     private final DatabaseConnection databaseConnection;
 
     @Inject
@@ -29,393 +39,280 @@ public class HotelRepository implements IHotelRepository {
         this.databaseConnection = databaseConnection;
     }
 
-    @Override
-    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
-        String sql = "INSERT INTO \"Room\" (number, price, capacity, stars, status) VALUES (?, ?, ?, ?, 'Available')";
-        try (Connection connection = databaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, roomNumber);
-            statement.setDouble(2, price);
-            statement.setInt(3, capacity);
-            statement.setInt(4, stars);
-            statement.executeUpdate();
-        } catch (SQLException e) {
+    public Room getRoomFromDatabase(int roomNumber) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            // Используем HQL (Hibernate Query Language) для поиска комнаты по номеру
+            return session.createQuery("FROM Room WHERE number = :roomNumber", Room.class)
+                    .setParameter("roomNumber", roomNumber)
+                    .uniqueResult();
+        } catch (Exception e) {
+            System.out.println("Error retrieving room details: " + e.getMessage());
             e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Room room = new Room(roomNumber, "Available", price, capacity, stars); // Статус по умолчанию "Available"
+
+            session.persist(room);
+            transaction.commit();
+            logger.info("Room added to database: " + room.getNumber());
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Error adding room to database: " + e.getMessage(), e);
+            throw e;
         }
     }
 
     public void removeRoomFromDatabase(int roomNumber) {
-        String sql = "DELETE FROM \"Room\" WHERE number = ?";
-        try (Connection connection = databaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, roomNumber);
-
-            int rowsDeleted = statement.executeUpdate();
-            if (rowsDeleted > 0) {
-                System.out.println("Room removed successfully from the database.");
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            Room room = session.createQuery("FROM Room WHERE number = :number", Room.class)
+                    .setParameter("number", roomNumber)
+                    .uniqueResult();
+            if (room != null) {
+                session.remove(room);
+                logger.info("Room removed from database: " + roomNumber);
             } else {
-                System.out.println("Room with the specified number does not exist.");
+                logger.warn("Room not found: " + roomNumber);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Error removing room from database: " + e.getMessage(), e);
+            throw e;
         }
     }
 
-    @Override
     public Room getRoom(int roomNumber) {
-        String sql = "SELECT * FROM \"Room\" WHERE number = ?"; 
-
-        try (Connection connection = databaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, roomNumber);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Room(
-                    resultSet.getString("id"),
-                    resultSet.getInt("number"),
-                    resultSet.getString("status"),
-                    resultSet.getDouble("price"),
-                    resultSet.getInt("capacity"),
-                    resultSet.getInt("stars")
-                );
-            }
-        } catch (SQLException e) {
-            System.out.println("Error while fetching room: " + e.getMessage());
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Room WHERE number = :number", Room.class)
+                    .setParameter("number", roomNumber)
+                    .uniqueResult();
+        } catch (Exception e) {
+            logger.error("Error fetching room: " + e.getMessage(), e);
+            throw e;
         }
-
-        return null; // Если комната не найдена, возвращаем null
     }
 
-
-
-    public Room getRoomFromDatabase(int roomNumber) {
-        String sql = "SELECT * FROM \"Room\" WHERE number = ?";
-        Room room = null;
-
-        try (Connection connection = databaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setInt(1, roomNumber);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    room = new Room(
-                        resultSet.getString("id"),
-                        resultSet.getInt("number"),
-                        resultSet.getString("status"),
-                        resultSet.getDouble("price"),
-                        resultSet.getInt("capacity"),
-                        resultSet.getInt("stars")
-                    );
-                }
-            }
-        } catch (SQLException e) {
-            System.out.println("Error retrieving room details: " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        return room;
-    }
-
-
-    @Override
     public List<Room> getAllRooms() {
-        List<Room> rooms = new ArrayList<>();
-        String sql = "SELECT * FROM \"Room\"";
-
-        try (Connection connection = databaseConnection.getConnection();
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(sql)) {
-
-            while (resultSet.next()) {
-                rooms.add(new Room(
-                    resultSet.getString("id"),
-                    resultSet.getInt("number"),
-                    resultSet.getString("status"),
-                    resultSet.getDouble("price"),
-                    resultSet.getInt("capacity"),
-                    resultSet.getInt("stars")
-                ));
-            }
-        } catch (SQLException e) {
-            System.out.println("Error while fetching rooms: " + e.getMessage());
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Room", Room.class).list();
+        } catch (Exception e) {
+            logger.error("Error fetching all rooms: " + e.getMessage(), e);
+            throw e;
         }
-
-        return rooms;
     }
 
-    @Override
     public List<Room> getAvailableRooms() {
-        List<Room> availableRooms = new ArrayList<>();
-        String sql = "SELECT * FROM \"Room\" WHERE \"status\" = 'available'";
-    
-        try (Connection connection = databaseConnection.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(sql);
-             ResultSet resultSet = preparedStatement.executeQuery()) {
-    
-            while (resultSet.next()) {
-                availableRooms.add(new Room(
-                    resultSet.getString("id"),
-                    resultSet.getInt("number"),
-                    resultSet.getString("status"),
-                    resultSet.getDouble("price"),
-                    resultSet.getInt("capacity"),
-                    resultSet.getInt("stars")
-                ));
-            }
-        } catch (SQLException e) {
-            System.out.println("Error while fetching available rooms: " + e.getMessage());
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Room WHERE status = 'Available'", Room.class).list();
+        } catch (Exception e) {
+            logger.error("Error fetching available rooms: " + e.getMessage(), e);
+            throw e;
         }
-    
-        return availableRooms;
     }
-    
-    
+
     @Override
     public void addService(String guestName, Service service) {
-        String sql = "INSERT INTO \"Service\" (id, name, category, price, date, guest_id) " +
-                    "VALUES (?, ?, ?, ?, ?, (SELECT id FROM \"Guest\" WHERE name = ?))";
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
 
-        try (Connection connection = databaseConnection.getConnection()) {
-            connection.setAutoCommit(false); // Отключаем автокоммит
+            Guest guest = session.createQuery("FROM Guest WHERE name = :guestName", Guest.class)
+                    .setParameter("guestName", guestName)
+                    .uniqueResult();
 
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setObject(1, UUID.fromString(service.getId()));
-                statement.setString(2, service.getName());
-                statement.setString(3, service.getCategory());
-                statement.setDouble(4, service.getPrice());
-                statement.setTimestamp(5, new java.sql.Timestamp(service.getDate().getTime()));
-                statement.setString(6, guestName);
-
-                int rowsAffected = statement.executeUpdate();
-                if (rowsAffected > 0) {
-                    connection.commit(); // Фиксируем транзакцию
-                    System.out.println("Service added for guest: " + guestName);
-                } else {
-                    connection.rollback(); // Откатываем транзакцию, если гость не найден
-                    System.out.println("Guest not found: " + guestName);
+            if (guest != null) {
+                service.setGuest(guest);
+                session.persist(service);
+                transaction.commit();
+                System.out.println("Service added for guest: " + guestName);
+            } else {
+                if (transaction != null) {
+                    transaction.rollback();
                 }
-            } catch (SQLException e) {
-                connection.rollback(); // Откатываем транзакцию при ошибке
-                System.out.println("Error while adding service for guest: " + e.getMessage());
+                System.out.println("Guest not found: " + guestName);
             }
-        } catch (SQLException e) {
-            System.out.println("Database connection error: " + e.getMessage());
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            System.out.println("Error while adding service for guest: " + e.getMessage());
         }
     }
 
     @Override
     public List<Service> getServicesForGuest(String guestName) {
-        List<Service> services = new ArrayList<>();
-        String getGuestIdSql = "SELECT id FROM \"Guest\" WHERE name = ?";
-        String getServicesSql = "SELECT name, category, price, date FROM \"Service\" WHERE guest_id = ?";
-    
-        try (Connection connection = databaseConnection.getConnection();
-             PreparedStatement getGuestIdStmt = connection.prepareStatement(getGuestIdSql);
-             PreparedStatement getServicesStmt = connection.prepareStatement(getServicesSql)) {
-    
-            getGuestIdStmt.setString(1, guestName);
-            ResultSet guestResult = getGuestIdStmt.executeQuery();
-    
-            if (guestResult.next()) {
-                UUID guestId = UUID.fromString(guestResult.getString("id"));
-    
-                getServicesStmt.setObject(1, guestId);
-                ResultSet servicesResult = getServicesStmt.executeQuery();
-    
-                while (servicesResult.next()) {
-                    Service service = new Service(
-                        servicesResult.getString("name"),
-                        servicesResult.getDouble("price"),
-                        servicesResult.getString("category")
-                    );
-                    services.add(service);
-                }
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Guest guest = session.createQuery("FROM Guest WHERE name = :guestName", Guest.class)
+                    .setParameter("guestName", guestName)
+                    .uniqueResult();
+
+            if (guest != null) {
+                return guest.getServices();
             } else {
                 System.out.println("Guest not found: " + guestName);
+                return new ArrayList<>();
             }
-    
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.out.println("Error while fetching services for guest: " + e.getMessage());
+            return new ArrayList<>();
         }
-        return services;
     }
-    
-    
+
+    public void addGuest(Guest guest) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(guest);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            System.out.println("Error while adding guest: " + e.getMessage());
+        }
+    }
+
+    public Guest getGuestByName(String name) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Guest g WHERE g.name = :name", Guest.class)
+                    .setParameter("name", name)
+                    .uniqueResult();
+        }
+    }
+
+
     @Override
     public Guest getGuest(String name) {
-        String sql = "SELECT * FROM \"Guest\" WHERE name = ?";
-        try (Connection connection = databaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-    
-            statement.setString(1, name);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    Guest guest = new Guest(resultSet.getString("name"));
-                    // Загрузим услуги для гостя, передавая имя
-                    guest.getServices().addAll(getServicesForGuest(name));
-                    return guest;
-                }
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            Query<Guest> query = session.createQuery("FROM Guest g WHERE g.name = :name", Guest.class);
+            query.setParameter("name", name);
+            Guest guest = query.uniqueResult();
+
+            if (guest != null) {
+                Hibernate.initialize(guest.getServices());
             }
-        } catch (SQLException e) {
+
+            return guest;
+        } catch (Exception e) {
             System.out.println("Error while fetching guest: " + e.getMessage());
+            return null;
         }
-        return null;
     }
-    
+
     @Override
     public void addStay(Stay stay) {
-        String sql = "INSERT INTO \"Stay\" (id, guestid, roomid, checkindate, checkoutdate) VALUES (?, ?, ?, ?, ?)";
-        try (Connection connection = databaseConnection.getConnection()) {
-            connection.setAutoCommit(false); // Отключаем автокоммит
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
 
-            try (PreparedStatement statement = connection.prepareStatement(sql)) {
-                statement.setObject(1, UUID.fromString(stay.getId()));
-                statement.setObject(2, UUID.fromString(stay.getGuest().getId()));
-                statement.setObject(3, UUID.fromString(stay.getRoom().getId()));
-                statement.setTimestamp(4, new java.sql.Timestamp(stay.getCheckInDate().getTime()));
-                statement.setTimestamp(5, new java.sql.Timestamp(stay.getCheckOutDate().getTime()));
+            session.persist(stay);
 
-                statement.executeUpdate();
-                connection.commit(); // Фиксируем транзакцию
-                System.out.println("Stay added successfully!");
-            } catch (SQLException e) {
-                connection.rollback(); // Откатываем транзакцию при ошибке
-                System.out.println("Error while adding stay: " + e.getMessage());
+            transaction.commit();
+            System.out.println("Stay added successfully!");
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
             }
-        } catch (SQLException e) {
-            System.out.println("Database connection error: " + e.getMessage());
+            System.out.println("Error while adding stay: " + e.getMessage());
         }
     }
+
 
     @Override
     public Room getRoomById(UUID id) {
-        String sql = "SELECT * FROM \"Room\" WHERE id = ?";
-        try (Connection connection = databaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
-
-            statement.setObject(1, id);
-            ResultSet resultSet = statement.executeQuery();
-
-            if (resultSet.next()) {
-                return new Room(
-                    resultSet.getString("id"),
-                    resultSet.getInt("number"),
-                    resultSet.getString("status"),
-                    resultSet.getDouble("price"),
-                    resultSet.getInt("capacity"),
-                    resultSet.getInt("stars")
-                );
-            }
-        } catch (SQLException e) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Room.class, id);
+        } catch (Exception e) {
             System.out.println("Error while fetching room: " + e.getMessage());
+            return null;
         }
-        return null;
     }
+
 
     @Override
     public List<Stay> getAllStays() {
-        List<Stay> stays = new ArrayList<>();
-        String sql = "SELECT g.name AS guest_name, r.id AS room_id, r.number AS room_number, r.status AS room_status, " +
-                     "r.price AS room_price, r.capacity AS room_capacity, r.stars AS room_stars, " +
-                     "s.check_in_date, s.check_out_date " +
-                     "FROM \"Stay\" s " +
-                     "JOIN \"Guest\" g ON s.guest_id = g.id " +
-                     "JOIN \"Room\" r ON s.room_id = r.id";
-    
-        try (Connection connection = databaseConnection.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
-    
-            while (resultSet.next()) {
-                Guest guest = new Guest(resultSet.getString("guest_name"));
-    
-                Room room = new Room(
-                    resultSet.getString("room_id"),   
-                    resultSet.getInt("room_number"),
-                    resultSet.getString("room_status"),
-                    resultSet.getDouble("room_price"),
-                    resultSet.getInt("room_capacity"),
-                    resultSet.getInt("room_stars")
-                );
-    
-                // Создаём пребывание (Stay)
-                Stay stay = new Stay(
-                    guest,
-                    room,
-                    resultSet.getDate("check_in_date"),
-                    resultSet.getDate("check_out_date")
-                );
-    
-                stays.add(stay);
-            }
-        } catch (SQLException e) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Stay", Stay.class).list();
+        } catch (Exception e) {
             System.out.println("Error while fetching stays: " + e.getMessage());
+            return Collections.emptyList();
         }
-    
-        return stays;
     }
+
 
     @Override
     public List<Guest> getAllGuests() {
-        List<Guest> guests = new ArrayList<>();
-        String sql = "SELECT name FROM \"Guest\"";
-    
-        try (Connection connection = databaseConnection.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(sql)) {
-    
-            while (resultSet.next()) {
-                guests.add(new Guest(resultSet.getString("name")));
-            }
-        } catch (SQLException e) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Guest", Guest.class).list();
+        } catch (Exception e) {
             System.out.println("Error while fetching guests: " + e.getMessage());
+            return Collections.emptyList();
         }
-    
-        return guests;
     }
-    
-    
+
+
+
     @Override
     public void updateRoomStatus(int roomNumber, String newStatus) {
-        String sql = "UPDATE \"Room\" SET status = ? WHERE number = ?";
-    
-        try (Connection connection = databaseConnection.getConnection();
-             PreparedStatement statement = connection.prepareStatement(sql)) {
-    
-            statement.setString(1, newStatus);
-            statement.setInt(2, roomNumber);
-    
-            int rowsAffected = statement.executeUpdate();
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+
+            Query query = session.createQuery("UPDATE Room r SET r.status = :status WHERE r.number = :number");
+            query.setParameter("status", newStatus);
+            query.setParameter("number", roomNumber);
+
+            int rowsAffected = query.executeUpdate();
+            transaction.commit();
+
             if (rowsAffected > 0) {
                 System.out.println("Room status updated successfully!");
             } else {
                 System.out.println("No room found with number: " + roomNumber);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             System.out.println("Error while updating room status: " + e.getMessage());
         }
     }
-    
 
     @Override
     public void setStatusAv(int roomNumber) {
-        String sql = "UPDATE \"Room\" SET status = 'Available' WHERE number = ?"; 
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
 
-        try (Connection connection = databaseConnection.getConnection();
-            PreparedStatement statement = connection.prepareStatement(sql)) {
+            Query query = session.createQuery("UPDATE Room r SET r.status = 'Available' WHERE r.number = :number");
+            query.setParameter("number", roomNumber);
 
-            statement.setInt(1, roomNumber); 
-            int rowsAffected = statement.executeUpdate();
+            int rowsAffected = query.executeUpdate();
+            transaction.commit();
 
             if (rowsAffected > 0) {
                 System.out.println("Room " + roomNumber + " status updated to Available.");
             } else {
                 System.out.println("Room not found or already checked out.");
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
             System.out.println("Error while updating room status: " + e.getMessage());
         }
     }
+
 }
