@@ -3,12 +3,19 @@ package com.test.config;
 import com.test.App;
 import com.test.annotations.Component;
 import com.test.annotations.Inject;
-
+import com.test.annotations.Bean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.reflections.Reflections;
+import org.reflections.scanners.MethodAnnotationsScanner;
+import org.reflections.scanners.SubTypesScanner;
+import org.reflections.scanners.TypeAnnotationsScanner;
+import org.reflections.util.ConfigurationBuilder;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -18,33 +25,67 @@ public class DependencyInjector {
     private static final Map<Class<?>, Object> dependencies = new HashMap<>();
     private static final Map<String, Object> Ndependencies = new HashMap<>();
 
-
     public DependencyInjector(String... basePackages) {
         for (String basePackage : basePackages) {
+            //scanAndRegisterComponentsAndBeans(basePackage);
             scanAndRegisterComponents(basePackage);
+            scanAndRegisterBeans(basePackage);
             dependencies.forEach((key, value) -> logger.info("Класс: " + key.getName()));
             Ndependencies.forEach((key, value) -> logger.info("Именованный бин: " + key + ", Экземпляр: " + value));
         }
     }
-//    public DependencyInjector(String[] pack) {
-//        for (int i = 0; i< pack.length; i++) {
-//            scanAndRegisterComponents(pack[i]);
-//        }
-//        dependencies.forEach((key, value) -> System.out.println("Класс: " + key.getName()));
-//        Ndependencies.forEach((key, value) -> System.out.println("Именованный бин: " + key + ", Экземпляр: " + value));
-//    }
+
+
+
+    public void scanAndRegisterBeans(String basePackage) {
+        Reflections reflections = new Reflections(
+                new ConfigurationBuilder()
+                        .forPackages(basePackage)
+                        .addScanners(new MethodAnnotationsScanner(), new TypeAnnotationsScanner(), new SubTypesScanner())
+        );
+
+        Set<Method> beanMethods = reflections.getMethodsAnnotatedWith(Bean.class);
+        System.out.println("Найдено методов с @Bean: " + beanMethods.size());
+
+        for (Method method : beanMethods) {
+            try {
+                Object declaringInstance = null;
+
+                // Если метод нестатический, создаем объект класса, где он объявлен
+                if (!Modifier.isStatic(method.getModifiers())) {
+                    declaringInstance = dependencies.get(method.getDeclaringClass());
+                    if (declaringInstance == null) {
+                        declaringInstance = createOrGetInstance(method.getDeclaringClass());
+                        dependencies.put(method.getDeclaringClass(), declaringInstance);
+                    }
+                }
+
+                // Вызываем метод
+                Object beanInstance = method.invoke(declaringInstance);
+                dependencies.put(method.getReturnType(), beanInstance);
+
+                logger.info("Bean registered: " + method.getReturnType().getName());
+            } catch (Exception e) {
+                logger.error("Ошибка при создании бина: " + method.getName(), e);
+                throw new RuntimeException("Не удалось создать бин: " + method.getName(), e);
+            }
+        }
+    }
+
+
+
 
     public void scanAndRegisterComponents(String basePackage) {
         Reflections reflections = new Reflections(basePackage);
         Set<Class<?>> componentClasses = reflections.getTypesAnnotatedWith(Component.class);
-    
+
         System.out.println("Найдено классов с @Component: " + componentClasses.size());
         for (Class<?> clazz : componentClasses) {
             System.out.println("Обнаружен: " + clazz.getName());
             try {
                 Object instance = createOrGetInstance(clazz);
                 dependencies.put(clazz, instance);
-    
+
                 Component component = clazz.getAnnotation(Component.class);
                 if (!component.value().isEmpty()) {
                     logger.info("Регистрируем именованный бин: " + component.value());
@@ -57,25 +98,19 @@ public class DependencyInjector {
             }
         }
     }
-    
+
     private static Object createOrGetInstance(Class<?> clazz) throws Exception {
         if (dependencies.containsKey(clazz)) {
             return dependencies.get(clazz);
         }
-    
+
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
         for (Constructor<?> constructor : constructors) {
-            // constructor.getAnnotations()[0].toString();
-            // System.out.println(constructor.getAnnotations()[0].annotationType());
-            // System.out.println(Inject1.class.getName());
             if (constructor.isAnnotationPresent(Inject.class)) {
                 logger.info("Creating instance with dependencies for: " + clazz.getName());
                 return createInstanceWithDependencies(constructor);
             }
         }
-
-
-
 
         try {
             Object instance = clazz.getDeclaredConstructor().newInstance();
@@ -85,11 +120,8 @@ public class DependencyInjector {
         } catch (NoSuchMethodException e) {
             throw new RuntimeException("No suitable constructor found for: " + clazz.getName());
         }
-
-        //throw new RuntimeException("No suitable constructor found for: " + clazz.getName());
     }
-    
-    
+
     public static <T> T getBean(Class<T> clazz) {
         T bean = (T) dependencies.get(clazz);
         if (bean == null) {
@@ -123,7 +155,7 @@ public class DependencyInjector {
     private static Object createInstanceWithDependencies(Constructor<?> constructor) throws Exception {
         Class<?>[] parameterTypes = constructor.getParameterTypes();
         Object[] parameters = new Object[parameterTypes.length];
-    
+
         logger.info("PT:    " + parameterTypes.length + constructor.getName());
         for (int i = 0; i < parameterTypes.length; i++) {
             parameters[i] = dependencies.get(parameterTypes[i]);
@@ -132,12 +164,12 @@ public class DependencyInjector {
             }
         }
         logger.info("for:    " + parameterTypes.length + constructor.getName());
-    
+
         Object instance = constructor.newInstance(parameters);
         logger.info("Instance created with dependencies: " + instance.getClass().getName());
 
         injectDependencies(instance);
-    
+
         dependencies.put(constructor.getDeclaringClass(), instance);
         return instance;
     }
@@ -145,5 +177,4 @@ public class DependencyInjector {
     public static void injectIntoExistingObject(Object object) {
         injectDependencies(object);
     }
-    
 }

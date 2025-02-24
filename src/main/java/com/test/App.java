@@ -6,6 +6,8 @@ import com.test.controller.GuestControllerIMPL;
 import com.test.controller.RoomControllerIMPL;
 import com.test.controller.ServiceControllerIMPL;
 import com.test.model.Room;
+import com.test.repository.HotelRepository;
+import com.test.resources.database.HibernateUtil;
 import com.test.service.PersistenceService;
 import com.test.ui.ConsoleUI;
 import com.test.ui.MenuItem;
@@ -27,9 +29,11 @@ public class App {
     private static final Logger logger = LogManager.getLogger(App.class);
     public static void main(String[] args) {
 
-        DependencyInjector injector = new DependencyInjector("com.test.resources.database", "com.test.moedel", "com.test.repository", "com.test.service", "com.test.controller", "com.test.ui.handler");
+        DependencyInjector injector = new DependencyInjector("com.test.resources.database", "com.test.model", "com.test.repository", "com.test.service", "com.test.controller", "com.test.ui.handler");
 
+        HibernateUtil hibernateUtil = injector.getBean(HibernateUtil.class);
         DatabaseConnection databaseConnection = injector.getBean(DatabaseConnection.class);
+        HotelRepository hotelRepository = injector.getBean(HotelRepository.class);
         CheckControllerIMPL checkController = injector.getBean(CheckControllerIMPL.class);
         GuestControllerIMPL guestController = injector.getBean(GuestControllerIMPL.class);
         RoomControllerIMPL roomController = injector.getBean(RoomControllerIMPL.class);
