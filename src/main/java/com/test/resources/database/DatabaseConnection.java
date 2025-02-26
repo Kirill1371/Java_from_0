@@ -2,6 +2,7 @@ package com.test.resources.database;
 
 import com.test.annotations.Component;
 import com.test.annotations.Inject;
+import com.test.config.ConfigProperty;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -32,3 +33,4 @@ public class DatabaseConnection {
         return DriverManager.getConnection(url, user, password);
     }
 }
+
