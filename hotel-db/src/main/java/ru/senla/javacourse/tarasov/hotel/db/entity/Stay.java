@@ -34,4 +34,11 @@ public class Stay {
 
     @Column(name = "check_out_date", nullable = false)
     private Date checkOutDate;
+
+    public Stay(Guest guest, Room room, Date checkInDate, Date checkOutDate) {
+        this.guest = guest;
+        this.room = room;
+        this.checkInDate = checkInDate;
+        this.checkOutDate = checkOutDate;
+    }
 }
