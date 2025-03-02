@@ -8,8 +8,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
-import ru.senla.javacourse.tarasov.hotel.impl.annotations.Component;
-import ru.senla.javacourse.tarasov.hotel.impl.annotations.Inject;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 @Component
 public class DatabaseConnection {

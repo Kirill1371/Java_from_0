@@ -13,6 +13,7 @@ import ru.senla.javacourse.tarasov.hotel.api.dto.StayDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Stay;
+import ru.senla.javacourse.tarasov.hotel.impl.mapper.RoomMapper;
 import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepositoryImpl;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
@@ -40,8 +41,9 @@ public class HotelServiceImpl implements HotelService {
 //////////////////////////////// Room ///////////////////////////////////////////
    
     @Override
-    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
-        hotelRepository.addRoomToDatabase(roomNumber, price, capacity, stars);
+    public void addRoomToDatabase(RoomDto roomDto) {
+        Room room = RoomMapper.toEntity(roomDto);
+        hotelRepository.addRoomToDatabase(room);
     }
     
     @Override

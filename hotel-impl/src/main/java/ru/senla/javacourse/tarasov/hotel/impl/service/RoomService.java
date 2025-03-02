@@ -1,0 +1,23 @@
+package ru.senla.javacourse.tarasov.hotel.impl.service;
+
+import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
+import java.util.Date;
+import java.util.List;
+
+public interface RoomService {
+    void addRoomToDatabase(RoomDto roomDto);
+    void removeRoomFromDatabase(int roomNumber);
+    void setRoomStatus(int roomNumber, String status);
+    void setRoomPrice(int roomNumber, double price);
+    List<RoomDto> getAllRooms();
+    List<RoomDto> getAvailableRooms();
+    List<RoomDto> getRoomsSortedByPrice();
+    List<RoomDto> getRoomsSortedByCapacity();
+    List<RoomDto> getRoomsSortedByStars();
+    List<RoomDto> getAvailableRoomsSortedByPrice();
+    List<RoomDto> getAvailableRoomsSortedByCapacity();
+    List<RoomDto> getAvailableRoomsSortedByStars();
+    int getTotalAvailableRooms();
+    List<RoomDto> getRoomsAvailableByDate(Date date);
+    RoomDto getRoomDetails(int roomNumber);
+}
