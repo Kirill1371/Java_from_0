@@ -2,12 +2,12 @@ package ru.senla.javacourse.tarasov.hotel.ui.handler;
 
 
 import java.util.Scanner;
-import ru.senla.javacourse.tarasov.hotel.impl.controller.RoomControllerImpl;
+import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
 
 public class RemoveRoomHandler implements CommandHandler {
-    private final RoomControllerImpl roomController;
+    private final RoomController roomController;
 
-    public RemoveRoomHandler(RoomControllerImpl roomController) {
+    public RemoveRoomHandler(RoomController roomController) {
         this.roomController = roomController;
     }
 

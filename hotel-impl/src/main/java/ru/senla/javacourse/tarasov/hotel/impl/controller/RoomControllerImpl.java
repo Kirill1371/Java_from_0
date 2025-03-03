@@ -1,155 +1,115 @@
 package ru.senla.javacourse.tarasov.hotel.impl.controller;
 
-
-
-
-
-
-import java.util.Date;
-import java.util.List;
 import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
+import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
+import ru.senla.javacourse.tarasov.hotel.impl.mapper.RoomMapper;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
-import ru.senla.javacourse.tarasov.hotel.db.entity.Stay;
+import ru.senla.javacourse.tarasov.hotel.impl.service.GuestServiceImpl;
 import ru.senla.javacourse.tarasov.hotel.impl.service.HotelServiceImpl;
+import ru.senla.javacourse.tarasov.hotel.impl.service.RoomServiceImpl;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
+import java.util.Date;
+import java.util.List;
+
 @Component
 public class RoomControllerImpl implements RoomController {
-    @Inject
-    private HotelServiceImpl hotelService;
 
     @Inject
-    public RoomControllerImpl(HotelServiceImpl hotelService) {
-        this.hotelService = hotelService;
+    private RoomServiceImpl roomService;
+
+    @Inject
+    public RoomControllerImpl(RoomServiceImpl roomService) {
+        this.roomService = roomService;
     }
 
-    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
-        hotelService.addRoomToDatabase(roomNumber, price, capacity, stars);
+    @Override
+    public void addRoomToDatabase(RoomDto roomDto) {
+        Room room = RoomMapper.toEntity(roomDto);
+        roomService.addRoomToDatabase(roomDto);
     }
 
+    @Override
     public void removeRoomFromDatabase(int roomNumber) {
-        hotelService.removeRoomFromDatabase(roomNumber);
+        roomService.removeRoomFromDatabase(roomNumber);
     }
 
+    @Override
     public void setRoomStatus(int roomNumber, String status) {
-        boolean isStatusChangeEnabled = ru.senla.javacourse.tarasov.hotel.impl.utils.ConfigManager.getBooleanProperty("room.status.change.enabled", false);
-
-        if (!isStatusChangeEnabled) {
-            System.out.println("Changing room status is disabled by configuration.");
-            return;
-        }
-
-        hotelService.setRoomStatus(roomNumber, status);
-        System.out.println("Room status updated to: " + status);
+        roomService.setRoomStatus(roomNumber, status);
     }
 
+    @Override
     public void setRoomPrice(int roomNumber, double price) {
-        hotelService.setRoomPrice(roomNumber, price);
+        roomService.setRoomPrice(roomNumber, price);
     }
 
+    @Override
     public void listAllRooms() {
-        for (Room room : hotelService.getAllRooms()) {
-            System.out.println("Room: " + room.getNumber() + ", Status: " + room.getStatus() + ", Price: " + room.getPrice() + ", Id: " + room.getId());
-        }
+        List<RoomDto> rooms = roomService.getAllRooms(); // Убрали повторный вызов маппера
+        rooms.forEach(room ->
+                System.out.println("Room: " + room.getNumber() + ", Status: " + room.getStatus() + ", Price: " + room.getPrice()));
     }
 
+
+    @Override
     public void listAvailableRooms() {
-        List<Room> availableRooms = hotelService.getAvailableRooms();
-        if (availableRooms.isEmpty()) {
-            System.out.println("No available rooms found.");
-        } else {
-            for (Room room : availableRooms) {
-                System.out.println("Room: " + room.getNumber() +
-                                ", Status: " + room.getStatus() +
-                                ", Price: " + room.getPrice());
-            }
-        }
+        List<RoomDto> availableRooms = roomService.getAvailableRooms();
+        availableRooms.forEach(room -> System.out.println("Room: " + room.getNumber() + ", Status: " + room.getStatus() + ", Price: " + room.getPrice()));
     }
 
-
-    
+    @Override
     public void listRoomsSortedByPrice() {
-        for (Room room : hotelService.getRoomsSortedByPrice()) {
-            System.out.println("Room: " + room.getNumber() + ", Price: " + room.getPrice());
-        }
+        List<RoomDto> rooms = roomService.getRoomsSortedByPrice();
+        rooms.forEach(room -> System.out.println("Room: " + room.getNumber() + ", Price: " + room.getPrice()));
     }
 
+    @Override
     public void listRoomsSortedByCapacity() {
-        for (Room room : hotelService.getRoomsSortedByCapacity()) {
-            System.out.println("Room: " + room.getNumber() + ", Capacity: " + room.getCapacity());
-        }
+        List<RoomDto> rooms = roomService.getRoomsSortedByCapacity();
+        rooms.forEach(room -> System.out.println("Room: " + room.getNumber() + ", Capacity: " + room.getCapacity()));
     }
 
+    @Override
     public void listRoomsSortedByStars() {
-        for (Room room : hotelService.getRoomsSortedByStars()) {
-            System.out.println("Room: " + room.getNumber() + ", Stars: " + room.getStars());
-        }
+        List<RoomDto> rooms = roomService.getRoomsSortedByStars();
+        rooms.forEach(room -> System.out.println("Room: " + room.getNumber() + ", Stars: " + room.getStars()));
     }
 
+    @Override
     public void listAvailableRoomsSortedByPrice() {
-        for (Room room : hotelService.getAvailableRoomsSortedByPrice()) {
-            System.out.println("Room: " + room.getNumber() + ", Price: " + room.getPrice());
-        }
+        List<RoomDto> rooms = roomService.getAvailableRoomsSortedByPrice();
+        rooms.forEach(room -> System.out.println("Room: " + room.getNumber() + ", Price: " + room.getPrice()));
     }
 
+    @Override
     public void listAvailableRoomsSortedByCapacity() {
-        for (Room room : hotelService.getAvailableRoomsSortedByCapacity()) {
-            System.out.println("Room: " + room.getNumber() + ", Capacity: " + room.getCapacity());
-        }
+        List<RoomDto> rooms = roomService.getAvailableRoomsSortedByCapacity();
+        rooms.forEach(room -> System.out.println("Room: " + room.getNumber() + ", Capacity: " + room.getCapacity()));
     }
 
+    @Override
     public void listAvailableRoomsSortedByStars() {
-        for (Room room : hotelService.getAvailableRoomsSortedByStars()) {
-            System.out.println("Room: " + room.getNumber() + ", Stars: " + room.getStars());
-        }
+        List<RoomDto> rooms = roomService.getAvailableRoomsSortedByStars();
+        rooms.forEach(room -> System.out.println("Room: " + room.getNumber() + ", Stars: " + room.getStars()));
     }
-   
+
+    @Override
     public void getTotalAvailableRooms() {
-        int totalAvailableRooms = hotelService.getTotalAvailableRooms();
+        int totalAvailableRooms = roomService.getTotalAvailableRooms();
         System.out.println("Total available rooms: " + totalAvailableRooms);
     }
 
+    @Override
     public void listRoomsAvailableByDate(Date date) {
-        for (Room room : hotelService.getRoomsAvailableByDate(date)) {
-            System.out.println("Room: " + room.getNumber() + ", Status: " + room.getStatus() + ", Price: " + room.getPrice());
-        }
+        List<RoomDto> rooms = roomService.getRoomsAvailableByDate(date);
+        rooms.forEach(room -> System.out.println("Room: " + room.getNumber() + ", Status: " + room.getStatus() + ", Price: " + room.getPrice()));
     }
 
-
+    @Override
     public void getRoomDetails(int roomNumber) {
-        Room room = hotelService.getRoomDetails(roomNumber);
-        if (room != null) {
-            System.out.println("Room: " + room.getNumber() + ", Status: " + room.getStatus() + ", Price: " + room.getPrice() + ", Capacity: " + room.getCapacity() + ", Stars: " + room.getStars());
-        } else {
-            System.out.println("Room not found: " + roomNumber);
-        }
-    }
-
-
-    public void getRoomDetailsFromDB(int roomNumber) {
-        Room room = hotelService.getRoomDetails(roomNumber);
-    
-        if (room != null) {
-            // Выводим информацию о комнате
-            System.out.println("Room Details:");
-            System.out.println("Number: " + room.getNumber());
-            System.out.println("Price: $" + room.getPrice());
-            System.out.println("Capacity: " + room.getCapacity() + " people");
-            System.out.println("Stars: " + room.getStars() + " stars");
-            System.out.println("Status: " + room.getStatus());
-        } else {
-            System.out.println("No room found with number: " + roomNumber);
-        }
-    }
-    
-
-
-    public void listLastThreeStays(int roomNumber) {
-        for (Stay stay : hotelService.getLastThreeStays(roomNumber)) {
-            System.out.println("Room: " + stay.getRoom().getNumber() + ", Check-in: " + stay.getCheckInDate() + ", Check-out: " + stay.getCheckOutDate());
-        }
+        RoomDto roomDto = roomService.getRoomDetails(roomNumber);
+        System.out.println("Room: " + roomDto.getNumber() + ", Status: " + roomDto.getStatus() + ", Price: " + roomDto.getPrice() + ", Capacity: " + roomDto.getCapacity() + ", Stars: " + roomDto.getStars());
     }
 }
-
-

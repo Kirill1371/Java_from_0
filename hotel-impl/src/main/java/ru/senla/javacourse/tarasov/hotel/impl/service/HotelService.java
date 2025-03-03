@@ -11,12 +11,15 @@ import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
 import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
 import ru.senla.javacourse.tarasov.hotel.api.dto.StayDto;
 
+
+
+
 public interface HotelService {
     void checkIn(int roomNumber, GuestDto guest, Date checkInDate, Date checkOutDate);
     void checkOut(int roomNumber);
     void setRoomStatus(int roomNumber, String status);
     void setRoomPrice(int roomNumber, double price);
-    void addRoomToDatabase(int roomNumber, double price, int capacity, int stars);
+    void addRoomToDatabase(RoomDto roomDto);
     void removeRoomFromDatabase(int roomNumber);
     void addService(String guestname, ServiceDto service);
     List<RoomDto> getAllRooms();

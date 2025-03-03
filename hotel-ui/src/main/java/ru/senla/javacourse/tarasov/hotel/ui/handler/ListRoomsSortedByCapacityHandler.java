@@ -2,13 +2,13 @@ package ru.senla.javacourse.tarasov.hotel.ui.handler;
 
 
 import java.util.Scanner;
-import ru.senla.javacourse.tarasov.hotel.impl.controller.RoomControllerImpl;
+import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
 
 public class ListRoomsSortedByCapacityHandler implements CommandHandler {
 
-    private final RoomControllerImpl roomController;
+    private final RoomController roomController;
 
-    public ListRoomsSortedByCapacityHandler(RoomControllerImpl roomController) {
+    public ListRoomsSortedByCapacityHandler(RoomController roomController) {
         this.roomController = roomController;
     }
     

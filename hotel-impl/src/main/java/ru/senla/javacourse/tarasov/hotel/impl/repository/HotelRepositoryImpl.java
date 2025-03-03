@@ -16,8 +16,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Stay;
 import ru.senla.javacourse.tarasov.hotel.db.entity.database.DatabaseConnection;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
@@ -50,12 +52,28 @@ public class HotelRepositoryImpl implements HotelRepository {
         }
     }
 
-    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
+//    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
+//        Transaction transaction = null;
+//        try (Session session = sessionFactory.openSession()) {
+//            transaction = session.beginTransaction();
+//
+//            Room room = new Room(roomNumber, "Available", price, capacity, stars); // Статус по умолчанию "Available"
+//            session.persist(room);
+//            transaction.commit();
+//            logger.info("Room added to database: " + room.getNumber());
+//        } catch (Exception e) {
+//            if (transaction != null) {
+//                transaction.rollback();
+//            }
+//            logger.error("Error adding room to database: " + e.getMessage(), e);
+//            throw e;
+//        }
+//    }
+
+    public void addRoomToDatabase(Room room) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
-
-            Room room = new Room(roomNumber, "Available", price, capacity, stars); // Статус по умолчанию "Available"
             session.persist(room);
             transaction.commit();
             logger.info("Room added to database: " + room.getNumber());

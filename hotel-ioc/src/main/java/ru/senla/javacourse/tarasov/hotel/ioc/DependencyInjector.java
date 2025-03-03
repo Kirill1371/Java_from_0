@@ -18,15 +18,14 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ConfigurationBuilder;
-import ru.senla.javacourse.tarasov.hotel.impl.App;
-import ru.senla.javacourse.tarasov.hotel.impl.annotations.Bean;
-import ru.senla.javacourse.tarasov.hotel.impl.annotations.Inject;
+//import ru.senla.javacourse.tarasov.hotel.impl.annotations.Bean;
+//import ru.senla.javacourse.tarasov.hotel.impl.annotations.Inject;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Bean;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 public class DependencyInjector {
-    private static final Logger logger = LogManager.getLogger(App.class);
+    private static final Logger logger = LogManager.getLogger(DependencyInjector.class);
     private static final Map<Class<?>, Object> dependencies = new HashMap<>();
     private static final Map<String, Object> Ndependencies = new HashMap<>();
 

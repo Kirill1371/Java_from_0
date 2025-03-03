@@ -2,13 +2,13 @@ package ru.senla.javacourse.tarasov.hotel.ui.handler;
 
 
 import java.util.Scanner;
-import ru.senla.javacourse.tarasov.hotel.impl.controller.CheckControllerImpl;
+import ru.senla.javacourse.tarasov.hotel.api.controller.CheckController;
 
 public class CheckOutHandler implements CommandHandler {
 
-    private final CheckControllerImpl checkController;
+    private final CheckController checkController;
 
-    public CheckOutHandler(CheckControllerImpl checkController) {
+    public CheckOutHandler(CheckController checkController) {
         this.checkController = checkController;
     }
 
