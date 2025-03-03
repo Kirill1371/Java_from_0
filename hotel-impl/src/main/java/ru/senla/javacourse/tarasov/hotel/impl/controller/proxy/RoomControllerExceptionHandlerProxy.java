@@ -2,6 +2,7 @@ package ru.senla.javacourse.tarasov.hotel.impl.controller.proxy;
 
 import java.util.Date;
 import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
+import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
 
 public class RoomControllerExceptionHandlerProxy implements RoomController {
     private final RoomController roomController;
@@ -10,10 +11,9 @@ public class RoomControllerExceptionHandlerProxy implements RoomController {
         this.roomController = roomController;
     }
 
-    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
-
+    public void addRoomToDatabase(RoomDto roomDto) {
         try {
-            roomController.addRoomToDatabase(roomNumber, price, capacity, stars);
+            roomController.addRoomToDatabase(roomDto);
         } catch(Exception e) {
             System.out.println("404");
         }
@@ -136,14 +136,6 @@ public class RoomControllerExceptionHandlerProxy implements RoomController {
     public void getTotalAvailableRooms() {
         try {
             roomController.getTotalAvailableRooms();
-        } catch (Exception e) {
-            System.out.println("404");
-        }
-    }
-
-    public void listLastThreeStays(int roomNumber) {
-        try {
-            roomController.listLastThreeStays(roomNumber);
         } catch (Exception e) {
             System.out.println("404");
         }

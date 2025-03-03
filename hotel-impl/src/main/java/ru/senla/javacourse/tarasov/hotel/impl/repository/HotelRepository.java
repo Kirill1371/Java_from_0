@@ -1,17 +1,15 @@
 package ru.senla.javacourse.tarasov.hotel.impl.repository;
 
-
-
-
-
 import java.util.List;
 import java.util.UUID;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Stay;
 
+// todo разделить на репозитории RoomRepository, ServiceRepository и т.д.
 public interface HotelRepository {
-    void addRoomToDatabase(int roomNumber, double price, int capacity, int stars);
+    void addRoom(Room room);
     Room getRoom(int roomNumber);
     List<Room> getAllRooms();
     List<Room> getAvailableRooms();
@@ -24,5 +22,8 @@ public interface HotelRepository {
     void updateRoomStatus(int roomNumber, String newStatus);
     Guest getGuest(String name);
     List<Guest> getAllGuests();
-
+    // todo этого метода небыло, но он использовался CheckServiceImpl:36
+    void addGuest(Guest guest);
+    // todo этого метода небыло, но он использовался RoomServiceImpl:31
+    void removeRoom(int roomNumber);
 }

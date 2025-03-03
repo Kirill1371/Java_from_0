@@ -1,15 +1,14 @@
 package ru.senla.javacourse.tarasov.hotel.ioc;
 
 
-
-
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -18,28 +17,27 @@ import org.reflections.scanners.MethodAnnotationsScanner;
 import org.reflections.scanners.SubTypesScanner;
 import org.reflections.scanners.TypeAnnotationsScanner;
 import org.reflections.util.ConfigurationBuilder;
-//import ru.senla.javacourse.tarasov.hotel.impl.annotations.Bean;
-//import ru.senla.javacourse.tarasov.hotel.impl.annotations.Inject;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Bean;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 public class DependencyInjector {
-    private static final Logger logger = LogManager.getLogger(DependencyInjector.class);
-    private static final Map<Class<?>, Object> dependencies = new HashMap<>();
-    private static final Map<String, Object> Ndependencies = new HashMap<>();
+    private final Logger logger = LogManager.getLogger(DependencyInjector.class);
+    private final Map<Class<?>, Object> dependencies = new HashMap<>();
+    private final Map<String, Object> Ndependencies = new HashMap<>();
+    private final String basePackage;
 
-    public DependencyInjector(String... basePackages) {
-        for (String basePackage : basePackages) {
-            //scanAndRegisterComponentsAndBeans(basePackage);
-            scanAndRegisterComponents(basePackage);
-            scanAndRegisterBeans(basePackage);
-            dependencies.forEach((key, value) -> logger.info("Класс: " + key.getName()));
-            Ndependencies.forEach((key, value) -> logger.info("Именованный бин: " + key + ", Экземпляр: " + value));
-        }
+    public DependencyInjector(String basePackage) {
+        this.basePackage = basePackage;
     }
 
-
+    public DependencyInjector init() {
+        scanAndRegisterBeans(basePackage);
+        scanAndRegisterComponents(basePackage);
+        dependencies.forEach((key, value) -> logger.info("Класс: " + key.getName()));
+        Ndependencies.forEach((key, value) -> logger.info("Именованный бин: " + key + ", Экземпляр: " + value));
+        return this;
+    }
 
     public void scanAndRegisterBeans(String basePackage) {
         Reflections reflections = new Reflections(
@@ -103,9 +101,19 @@ public class DependencyInjector {
         }
     }
 
-    private static Object createOrGetInstance(Class<?> clazz) throws Exception {
+    private Object createOrGetInstance(Class<?> clazz) throws Exception {
         if (dependencies.containsKey(clazz)) {
             return dependencies.get(clazz);
+        }
+
+        if (clazz.isInterface()) {
+            Reflections reflections = new Reflections(basePackage);
+            Set<Class<?>> componentClasses = reflections.getTypesAnnotatedWith(Component.class);
+            Class<?> ifcClazz = clazz;
+            clazz = componentClasses.stream()
+                .filter(cls -> Arrays.asList(cls.getInterfaces()).contains(ifcClazz))
+                .findFirst()
+                .orElseThrow();
         }
 
         Constructor<?>[] constructors = clazz.getDeclaredConstructors();
@@ -126,7 +134,7 @@ public class DependencyInjector {
         }
     }
 
-    public static <T> T getBean(Class<T> clazz) {
+    public <T> T getBean(Class<T> clazz) {
         T bean = (T) dependencies.get(clazz);
         if (bean == null) {
             throw new RuntimeException("No bean found for: " + clazz.getName());
@@ -134,7 +142,7 @@ public class DependencyInjector {
         return bean;
     }
 
-    private static void injectDependencies(Object instance) {
+    private void injectDependencies(Object instance) {
         Field[] fields = instance.getClass().getDeclaredFields();
         for (Field field : fields) {
             if (field.isAnnotationPresent(Inject.class)) {
@@ -156,16 +164,28 @@ public class DependencyInjector {
         }
     }
 
-    private static Object createInstanceWithDependencies(Constructor<?> constructor) throws Exception {
+    private Object createInstanceWithDependencies(Constructor<?> constructor) throws Exception {
         Class<?>[] parameterTypes = constructor.getParameterTypes();
         Object[] parameters = new Object[parameterTypes.length];
 
         logger.info("PT:    " + parameterTypes.length + constructor.getName());
+//        for (int i = 0; i < parameterTypes.length; i++) {
+//            parameters[i] = dependencies.get(parameterTypes[i]);
+//            if (parameters[i] == null) {
+//                throw new RuntimeException("No registered dependency found for: " + parameterTypes[i].getName());
+//            }
+//        }
         for (int i = 0; i < parameterTypes.length; i++) {
-            parameters[i] = dependencies.get(parameterTypes[i]);
-            if (parameters[i] == null) {
-                throw new RuntimeException("No registered dependency found for: " + parameterTypes[i].getName());
-            }
+            Class<?> type = parameterTypes[i];
+            Optional.ofNullable(dependencies.get(type))
+                .or(() -> {
+                    try {
+                        return Optional.ofNullable(createOrGetInstance(type));
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                })
+                .orElseThrow(() -> new RuntimeException("No registered dependency found for: " + type.getName()));
         }
         logger.info("for:    " + parameterTypes.length + constructor.getName());
 
@@ -178,7 +198,7 @@ public class DependencyInjector {
         return instance;
     }
 
-    public static void injectIntoExistingObject(Object object) {
+    public void injectIntoExistingObject(Object object) {
         injectDependencies(object);
     }
 }

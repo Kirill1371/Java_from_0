@@ -1,4 +1,4 @@
-package ru.senla.javacourse.tarasov.hotel.db.entity.database;
+package ru.senla.javacourse.tarasov.hotel.impl.config;
 
 
 
@@ -6,8 +6,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
-import ru.senla.javacourse.tarasov.hotel.impl.annotations.Bean;
-import ru.senla.javacourse.tarasov.hotel.impl.annotations.Component;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Bean;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 
 @Component
 public class HibernateUtil {

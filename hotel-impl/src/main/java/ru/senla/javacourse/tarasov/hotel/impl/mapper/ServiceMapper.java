@@ -1,10 +1,9 @@
 package ru.senla.javacourse.tarasov.hotel.impl.mapper;
 
-import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
-import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
+import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
 
 public class ServiceMapper {
 

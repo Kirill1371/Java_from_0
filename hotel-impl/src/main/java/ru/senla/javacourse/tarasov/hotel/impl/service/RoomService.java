@@ -1,8 +1,8 @@
 package ru.senla.javacourse.tarasov.hotel.impl.service;
 
-import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
 import java.util.Date;
 import java.util.List;
+import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
 
 public interface RoomService {
     void addRoomToDatabase(RoomDto roomDto);

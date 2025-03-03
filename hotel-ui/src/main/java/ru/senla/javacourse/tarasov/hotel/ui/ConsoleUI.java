@@ -2,12 +2,17 @@ package ru.senla.javacourse.tarasov.hotel.ui;
 
 import java.util.List;
 import java.util.Scanner;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
+@Component
 public class ConsoleUI {
+
     private final List<MenuItem> menuItems;
 
-    public ConsoleUI(List<MenuItem> menuItems) {
-        this.menuItems = menuItems;
+    @Inject
+    public ConsoleUI(MenuBuilder menuBuilder) {
+        this.menuItems = menuBuilder.buildMenuItems();
     }
 
     public void start() {

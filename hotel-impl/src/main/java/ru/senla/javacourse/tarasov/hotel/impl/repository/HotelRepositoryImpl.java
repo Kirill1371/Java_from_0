@@ -1,76 +1,31 @@
 package ru.senla.javacourse.tarasov.hotel.impl.repository;
 
-
-
-
-
-
-
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import javax.management.Query;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Stay;
-import ru.senla.javacourse.tarasov.hotel.db.entity.database.DatabaseConnection;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
-
 
 @Component
 public class HotelRepositoryImpl implements HotelRepository {
 
     private static final Logger logger = LogManager.getLogger(HotelRepositoryImpl.class);
-    private final DatabaseConnection databaseConnection;
-
-    @Inject
-    public HotelRepositoryImpl(DatabaseConnection databaseConnection) {
-        this.databaseConnection = databaseConnection;
-    }
-
-
     @Inject
     private SessionFactory sessionFactory;
 
-    public Room getRoomFromDatabase(int roomNumber) {
-        try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Room WHERE number = :roomNumber", Room.class)
-                    .setParameter("roomNumber", roomNumber)
-                    .uniqueResult();
-        } catch (Exception e) {
-            logger.error("Error retrieving room details: " + e.getMessage(), e);
-            return null;
-        }
-    }
-
-//    public void addRoomToDatabase(int roomNumber, double price, int capacity, int stars) {
-//        Transaction transaction = null;
-//        try (Session session = sessionFactory.openSession()) {
-//            transaction = session.beginTransaction();
-//
-//            Room room = new Room(roomNumber, "Available", price, capacity, stars); // Статус по умолчанию "Available"
-//            session.persist(room);
-//            transaction.commit();
-//            logger.info("Room added to database: " + room.getNumber());
-//        } catch (Exception e) {
-//            if (transaction != null) {
-//                transaction.rollback();
-//            }
-//            logger.error("Error adding room to database: " + e.getMessage(), e);
-//            throw e;
-//        }
-//    }
-
-    public void addRoomToDatabase(Room room) {
+    @Override
+    public void addRoom(Room room) {
         Transaction transaction = null;
         try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
@@ -86,29 +41,7 @@ public class HotelRepositoryImpl implements HotelRepository {
         }
     }
 
-    public void removeRoomFromDatabase(int roomNumber) {
-        Transaction transaction = null;
-        try (Session session = sessionFactory.openSession()) {
-            transaction = session.beginTransaction();
-            Room room = session.createQuery("FROM Room WHERE number = :number", Room.class)
-                    .setParameter("number", roomNumber)
-                    .uniqueResult();
-            if (room != null) {
-                session.remove(room);
-                logger.info("Room removed from database: " + roomNumber);
-            } else {
-                logger.warn("Room not found: " + roomNumber);
-            }
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            logger.error("Error removing room from database: " + e.getMessage(), e);
-            throw e;
-        }
-    }
-
+    @Override
     public Room getRoom(int roomNumber) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM Room WHERE number = :number", Room.class)
@@ -120,6 +53,7 @@ public class HotelRepositoryImpl implements HotelRepository {
         }
     }
 
+    @Override
     public List<Room> getAllRooms() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM Room", Room.class).list();
@@ -129,6 +63,7 @@ public class HotelRepositoryImpl implements HotelRepository {
         }
     }
 
+    @Override
     public List<Room> getAvailableRooms() {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery("FROM Room WHERE status = 'Available'", Room.class).list();
@@ -195,6 +130,30 @@ public class HotelRepositoryImpl implements HotelRepository {
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
             logger.error("Error while adding guest: " + e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void removeRoom(int roomNumber) {
+        Transaction transaction = null;
+        try (Session session = sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Room room = session.createQuery("FROM Room WHERE number = :number", Room.class)
+                               .setParameter("number", roomNumber)
+                               .uniqueResult();
+            if (room != null) {
+                session.remove(room);
+                logger.info("Room removed from database: " + roomNumber);
+            } else {
+                logger.warn("Room not found: " + roomNumber);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+            }
+            logger.error("Error removing room from database: " + e.getMessage(), e);
+            throw e;
         }
     }
 

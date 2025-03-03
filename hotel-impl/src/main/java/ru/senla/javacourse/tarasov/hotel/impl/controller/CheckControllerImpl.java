@@ -1,21 +1,17 @@
 package ru.senla.javacourse.tarasov.hotel.impl.controller;
 
+import java.util.Date;
 import ru.senla.javacourse.tarasov.hotel.api.controller.CheckController;
 import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
-import ru.senla.javacourse.tarasov.hotel.api.dto.StayDto;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.GuestMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.StayMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.service.CheckServiceImpl;
+import ru.senla.javacourse.tarasov.hotel.impl.service.CheckService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
-
-import java.util.Date;
 
 @Component
 public class CheckControllerImpl implements CheckController {
 
     @Inject
-    private CheckServiceImpl checkService;
+    private CheckService checkService;
 
     @Override
     public void checkIn(int roomNumber, GuestDto guestDto, Date checkInDate, Date checkOutDate) {

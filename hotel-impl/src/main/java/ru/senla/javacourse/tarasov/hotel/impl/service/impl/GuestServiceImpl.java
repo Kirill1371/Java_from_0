@@ -1,24 +1,22 @@
-package ru.senla.javacourse.tarasov.hotel.impl.service;
+package ru.senla.javacourse.tarasov.hotel.impl.service.impl;
 
-
-import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
-import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.RoomMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.service.GuestService;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.GuestMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepositoryImpl;
-import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
-import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
+import ru.senla.javacourse.tarasov.hotel.impl.mapper.GuestMapper;
+import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
+import ru.senla.javacourse.tarasov.hotel.impl.service.GuestService;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 @Component
 public class GuestServiceImpl implements GuestService {
 
     @Inject
-    private HotelRepositoryImpl hotelRepository;
+    private HotelRepository hotelRepository;
 
     @Override
     public List<GuestDto> getAllGuests() {

@@ -1,29 +1,20 @@
 package ru.senla.javacourse.tarasov.hotel.impl.controller;
 
+import java.util.List;
 import ru.senla.javacourse.tarasov.hotel.api.controller.ServiceController;
 import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.ServiceMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.service.HotelServiceImpl;
-import ru.senla.javacourse.tarasov.hotel.impl.service.ServiceServiceImpl;
+import ru.senla.javacourse.tarasov.hotel.impl.service.ServiceService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
-
-import java.util.List;
 
 @Component
 public class ServiceControllerImpl implements ServiceController {
 
     @Inject
-    private ServiceServiceImpl serviceService;
-
-    @Inject
-    public ServiceControllerImpl(ServiceServiceImpl serviceService) {
-        this.serviceService = serviceService;
-    }
+    private ServiceService serviceService;
 
     @Override
     public void addService(String guestName, ServiceDto serviceDto) {
-        var service = ServiceMapper.toEntity(serviceDto);
         serviceService.addService(guestName, serviceDto);
     }
 

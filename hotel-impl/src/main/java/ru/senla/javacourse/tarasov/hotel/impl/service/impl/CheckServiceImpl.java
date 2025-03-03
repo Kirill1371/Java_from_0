@@ -1,22 +1,21 @@
-package ru.senla.javacourse.tarasov.hotel.impl.service;
+package ru.senla.javacourse.tarasov.hotel.impl.service.impl;
 
+import java.util.Date;
 import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Stay;
-import ru.senla.javacourse.tarasov.hotel.impl.service.CheckService;
 import ru.senla.javacourse.tarasov.hotel.impl.mapper.GuestMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepositoryImpl;
+import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
+import ru.senla.javacourse.tarasov.hotel.impl.service.CheckService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
-
-import java.util.Date;
 
 @Component
 public class CheckServiceImpl implements CheckService {
 
     @Inject
-    private HotelRepositoryImpl hotelRepository;
+    private HotelRepository hotelRepository;
 
     @Override
     public void checkIn(int roomNumber, GuestDto guestDto, Date checkInDate, Date checkOutDate) {
@@ -30,7 +29,7 @@ public class CheckServiceImpl implements CheckService {
             Guest guest = GuestMapper.toEntity(guestDto);
 
             // Проверяем, существует ли гость в базе данных, если нет — сохраняем его
-            Guest existingGuest = hotelRepository.getGuestByName(guest.getName());
+            Guest existingGuest = hotelRepository.getGuest(guest.getName());
             if (existingGuest == null) {
                 hotelRepository.addGuest(guest); // Сохраняем гостя перед заселением
             } else {

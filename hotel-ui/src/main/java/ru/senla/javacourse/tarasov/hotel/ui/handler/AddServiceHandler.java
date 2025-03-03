@@ -2,7 +2,6 @@ package ru.senla.javacourse.tarasov.hotel.ui.handler;
 
 import java.util.Scanner;
 import ru.senla.javacourse.tarasov.hotel.api.controller.ServiceController;
-import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
 
 public class AddServiceHandler implements CommandHandler {
     private final ServiceController serviceController;
@@ -26,9 +25,10 @@ public class AddServiceHandler implements CommandHandler {
         System.out.println("Enter service category:");
         String category = scanner.nextLine();
 
-        Service newService = new Service(serviceName, price, category);
+        // todo поправить
+//        Service newService = new Service(serviceName, price, category);
 
-        serviceController.addService(guestName, newService);
+//        serviceController.addService(guestName, newService);
 
         System.out.println("Service added successfully for guest: " + guestName);
     }

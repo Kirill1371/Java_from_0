@@ -35,6 +35,8 @@
     <logback.version>1.5.16</logback.version>
   </properties>
 
+  <!-- todo подправить все помники. Вынести версии в properties. Необязательные зависимости
+        в dependencyManagemnt(https://www.baeldung.com/maven-dependencymanagement-vs-dependencies-tags) -->
   <dependencies>
     <dependency>
       <groupId>org.projectlombok</groupId>

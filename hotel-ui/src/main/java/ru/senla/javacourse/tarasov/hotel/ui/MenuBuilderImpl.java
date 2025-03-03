@@ -1,60 +1,59 @@
-import config.DependencyInjector;
-import controller.CheckControllerIMPL;
-import controller.GuestControllerIMPL;
-import controller.RoomControllerIMPL;
-import controller.ServiceControllerIMPL;
-import model.Room;
-import service.PersistenceService;
-import ui.ConsoleUI;
-import ui.MenuItem;
-import ui.handler.*;
+package ru.senla.javacourse.tarasov.hotel.ui;
 
-import resources.*;
-import resources.database.DatabaseConnection;
-
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
+import ru.senla.javacourse.tarasov.hotel.api.controller.CheckController;
+import ru.senla.javacourse.tarasov.hotel.api.controller.GuestController;
+import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
+import ru.senla.javacourse.tarasov.hotel.api.controller.ServiceController;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.AddRoomHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.CheckOutHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.GetRoomDetailsHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.GetTotalAvailableRoomsHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.GetTotalGuestsHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.GetTotalPaymentForGuestHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListAllGuestsHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListAllRoomsHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListAvailableRoomsHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListAvailableRoomsSortedByCapacityHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListAvailableRoomsSortedByPriceHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListAvailableRoomsSortedByStarsHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListGuestServicesSortedByDateHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListGuestServicesSortedByPriceHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListGuestsSortedByCheckOutDateHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListGuestsSortedByNameHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListLastThreeStaysHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListRoomsAvailableByDateHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListRoomsSortedByCapacityHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.ListRoomsSortedByStarsHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.RemoveRoomHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.SetRoomPriceHandler;
+import ru.senla.javacourse.tarasov.hotel.ui.handler.SetRoomStatusHandler;
 
-public class Main {
-    public static void main(String[] args) {
+@Component
+public class MenuBuilderImpl implements MenuBuilder {
 
-        DependencyInjector injector = new DependencyInjector(new String[] {"resources.database", "repository", "service", "controller", "ui.handler"});
+    @Inject
+    private RoomController roomController;
+    @Inject
+    private CheckController checkController;
+    @Inject
+    private GuestController guestController;
+    @Inject
+    private ServiceController serviceController;
 
-        DatabaseConnection databaseConnection = injector.getBean(DatabaseConnection.class);
-        CheckControllerIMPL checkController = injector.getBean(CheckControllerIMPL.class);
-        GuestControllerIMPL guestController = injector.getBean(GuestControllerIMPL.class);
-        RoomControllerIMPL roomController = injector.getBean(RoomControllerIMPL.class);
-        ServiceControllerIMPL serviceController = injector.getBean(ServiceControllerIMPL.class);
-
+    @Override
+    public List<MenuItem> buildMenuItems() {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        AtomicReference<List<Room>> roomsRef = new AtomicReference<>(PersistenceService.loadState());
-        if (roomsRef.get() == null) {
-            roomsRef.set(new ArrayList<>());
-        }
-
-        try {
-            System.out.println("Calling DatabaseConnection.getConnection()...");
-            Connection connection = databaseConnection.getConnection();
-            System.out.println("Connection successful!");
-            connection.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.out.println("Failed to connect to the database: " + e.getMessage());
-        }
-
         List<MenuItem> menuItems = new ArrayList<>();
         menuItems.add(new MenuItem("Add Room", new AddRoomHandler(roomController)));
         menuItems.add(new MenuItem("Remove Room", new RemoveRoomHandler(roomController)));
-        menuItems.add(new MenuItem("Check In Guest", new CheckInHandler(checkController, dateFormat)));
         menuItems.add(new MenuItem("Check Out Guest", new CheckOutHandler(checkController)));
         menuItems.add(new MenuItem("Set Room Status", new SetRoomStatusHandler(roomController)));
         menuItems.add(new MenuItem("Set Room Price", new SetRoomPriceHandler(roomController)));
-        menuItems.add(new MenuItem("Add Service", new AddServiceHandler(serviceController)));
         menuItems.add(new MenuItem("List All Rooms", new ListAllRoomsHandler(roomController)));
         menuItems.add(new MenuItem("List Available Rooms", new ListAvailableRoomsHandler(roomController)));
         menuItems.add(new MenuItem("List All Guests", new ListAllGuestsHandler(guestController)));
@@ -73,10 +72,6 @@ public class Main {
         menuItems.add(new MenuItem("List Guest Services Sorted By Price", new ListGuestServicesSortedByPriceHandler(serviceController)));
         menuItems.add(new MenuItem("List Guest Services Sorted By Date", new ListGuestServicesSortedByDateHandler(serviceController)));
         menuItems.add(new MenuItem("Get Room Details", new GetRoomDetailsHandler(roomController)));
-
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> PersistenceService.saveState(roomsRef.get())));
-
-        ConsoleUI consoleUI = new ConsoleUI(menuItems);
-        consoleUI.start();
+        return menuItems;
     }
 }

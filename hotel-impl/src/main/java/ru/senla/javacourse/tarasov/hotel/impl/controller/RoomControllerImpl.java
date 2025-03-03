@@ -1,28 +1,20 @@
 package ru.senla.javacourse.tarasov.hotel.impl.controller;
 
-import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
-import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.RoomMapper;
-import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
-import ru.senla.javacourse.tarasov.hotel.impl.service.GuestServiceImpl;
-import ru.senla.javacourse.tarasov.hotel.impl.service.HotelServiceImpl;
-import ru.senla.javacourse.tarasov.hotel.impl.service.RoomServiceImpl;
-import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
-import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
-
 import java.util.Date;
 import java.util.List;
+import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
+import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
+import ru.senla.javacourse.tarasov.hotel.impl.mapper.RoomMapper;
+import ru.senla.javacourse.tarasov.hotel.impl.service.RoomService;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 @Component
 public class RoomControllerImpl implements RoomController {
 
     @Inject
-    private RoomServiceImpl roomService;
-
-    @Inject
-    public RoomControllerImpl(RoomServiceImpl roomService) {
-        this.roomService = roomService;
-    }
+    private RoomService roomService;
 
     @Override
     public void addRoomToDatabase(RoomDto roomDto) {

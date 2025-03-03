@@ -1,24 +1,22 @@
-package ru.senla.javacourse.tarasov.hotel.impl.service;
-
-import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
-import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
-import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.GuestMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.service.ServiceService;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.ServiceMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepositoryImpl;
-import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
-import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
+package ru.senla.javacourse.tarasov.hotel.impl.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
+import ru.senla.javacourse.tarasov.hotel.impl.mapper.ServiceMapper;
+import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
+import ru.senla.javacourse.tarasov.hotel.impl.service.ServiceService;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 @Component
 public class ServiceServiceImpl implements ServiceService {
 
     @Inject
-    private HotelRepositoryImpl hotelRepository;
+    private HotelRepository hotelRepository;
 
     @Override
     public void addService(String guestName, ServiceDto serviceDto) {

@@ -1,7 +1,7 @@
 package ru.senla.javacourse.tarasov.hotel.impl.service;
 
-import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
 import java.util.List;
+import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
 
 public interface ServiceService {
     void addService(String guestName, ServiceDto serviceDto);

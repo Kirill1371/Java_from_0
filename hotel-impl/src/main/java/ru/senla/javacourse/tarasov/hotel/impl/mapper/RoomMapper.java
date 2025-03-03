@@ -1,9 +1,9 @@
 package ru.senla.javacourse.tarasov.hotel.impl.mapper;
 
-import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
-import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 import java.util.List;
 import java.util.stream.Collectors;
+import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 
 public class RoomMapper {
 

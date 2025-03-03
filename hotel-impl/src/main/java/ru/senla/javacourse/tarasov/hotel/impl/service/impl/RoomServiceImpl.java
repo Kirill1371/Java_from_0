@@ -1,33 +1,32 @@
-package ru.senla.javacourse.tarasov.hotel.impl.service;
-
-import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
-import ru.senla.javacourse.tarasov.hotel.impl.service.RoomService;
-import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.RoomMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepositoryImpl;
-import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
-import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
+package ru.senla.javacourse.tarasov.hotel.impl.service.impl;
 
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
+import ru.senla.javacourse.tarasov.hotel.impl.mapper.RoomMapper;
+import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
+import ru.senla.javacourse.tarasov.hotel.impl.service.RoomService;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 @Component
 public class RoomServiceImpl implements RoomService {
 
     @Inject
-    private HotelRepositoryImpl hotelRepository;
+    private HotelRepository hotelRepository;
 
     @Override
     public void addRoomToDatabase(RoomDto roomDto) {
         Room room = RoomMapper.toEntity(roomDto);
-        hotelRepository.addRoomToDatabase(room);
+        hotelRepository.addRoom(room);
     }
 
     @Override
     public void removeRoomFromDatabase(int roomNumber) {
-        hotelRepository.removeRoomFromDatabase(roomNumber);
+        hotelRepository.removeRoom(roomNumber);
     }
 
     @Override
@@ -127,7 +126,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto getRoomDetails(int roomNumber) {
-        Room room = hotelRepository.getRoomFromDatabase(roomNumber);
+        Room room = hotelRepository.getRoom(roomNumber);
         return RoomMapper.toDto(room);
     }
 }

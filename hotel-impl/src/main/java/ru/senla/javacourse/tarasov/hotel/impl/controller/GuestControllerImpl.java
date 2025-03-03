@@ -1,25 +1,17 @@
 package ru.senla.javacourse.tarasov.hotel.impl.controller;
 
+import java.util.List;
 import ru.senla.javacourse.tarasov.hotel.api.controller.GuestController;
 import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
-import ru.senla.javacourse.tarasov.hotel.impl.mapper.GuestMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.service.GuestServiceImpl;
-import ru.senla.javacourse.tarasov.hotel.impl.service.HotelServiceImpl;
+import ru.senla.javacourse.tarasov.hotel.impl.service.GuestService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
-
-import java.util.List;
 
 @Component
 public class GuestControllerImpl implements GuestController {
 
     @Inject
-    private GuestServiceImpl guestService;
-
-    @Inject
-    public GuestControllerImpl(GuestServiceImpl guestService) {
-        this.guestService = guestService;
-    }
+    private GuestService guestService;
 
     @Override
     public void listAllGuests() {

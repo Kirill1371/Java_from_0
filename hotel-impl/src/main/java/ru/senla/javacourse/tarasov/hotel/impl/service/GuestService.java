@@ -1,7 +1,7 @@
 package ru.senla.javacourse.tarasov.hotel.impl.service;
 
-import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
 import java.util.List;
+import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
 
 public interface GuestService {
     List<GuestDto> getAllGuests();
