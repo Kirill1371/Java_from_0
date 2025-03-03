@@ -5,14 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
-import ru.senla.javacourse.tarasov.hotel.impl.controller.RoomControllerImpl;
+import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
 
 public class ListRoomsAvailableByDateHandler implements CommandHandler {
 
-    private final RoomControllerImpl roomController;
+    private final RoomController roomController;
     private final SimpleDateFormat dateFormat;
 
-    public ListRoomsAvailableByDateHandler(RoomControllerImpl roomController, SimpleDateFormat dateFormat) {
+    public ListRoomsAvailableByDateHandler(RoomController roomController, SimpleDateFormat dateFormat) {
         this.roomController = roomController;
         this.dateFormat = dateFormat;
     }

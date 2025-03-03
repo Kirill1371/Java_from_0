@@ -18,7 +18,7 @@
     <dependencies>
         <dependency>
             <groupId>ru.senla.javacourse.tarasov</groupId>
-            <artifactId>hotel-impl</artifactId>
+            <artifactId>hotel-api</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
     </dependencies>

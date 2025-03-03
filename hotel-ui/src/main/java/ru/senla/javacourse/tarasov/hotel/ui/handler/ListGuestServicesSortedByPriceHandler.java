@@ -2,13 +2,13 @@ package ru.senla.javacourse.tarasov.hotel.ui.handler;
 
 
 import java.util.Scanner;
-import ru.senla.javacourse.tarasov.hotel.impl.controller.ServiceControllerImpl;
+import ru.senla.javacourse.tarasov.hotel.api.controller.ServiceController;
 
 public class ListGuestServicesSortedByPriceHandler implements CommandHandler {
 
-    private final ServiceControllerImpl serviceController;
+    private final ServiceController serviceController;
 
-    public ListGuestServicesSortedByPriceHandler(ServiceControllerImpl serviceController) {
+    public ListGuestServicesSortedByPriceHandler(ServiceController serviceController) {
         this.serviceController = serviceController;
     }
 

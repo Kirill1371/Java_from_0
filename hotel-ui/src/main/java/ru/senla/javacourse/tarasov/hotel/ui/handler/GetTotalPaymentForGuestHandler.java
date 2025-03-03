@@ -2,13 +2,13 @@ package ru.senla.javacourse.tarasov.hotel.ui.handler;
 
 
 import java.util.Scanner;
-import ru.senla.javacourse.tarasov.hotel.impl.controller.GuestControllerImpl;
+import ru.senla.javacourse.tarasov.hotel.api.controller.GuestController;
 
 public class GetTotalPaymentForGuestHandler implements CommandHandler {
 
-    private final GuestControllerImpl guestController;
+    private final GuestController guestController;
 
-    public GetTotalPaymentForGuestHandler(GuestControllerImpl guestController) {
+    public GetTotalPaymentForGuestHandler(GuestController guestController) {
         this.guestController = guestController;
     }
     @Override

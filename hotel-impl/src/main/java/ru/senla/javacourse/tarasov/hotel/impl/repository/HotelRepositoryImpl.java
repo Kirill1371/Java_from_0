@@ -19,6 +19,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
+import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Stay;
 import ru.senla.javacourse.tarasov.hotel.db.entity.database.DatabaseConnection;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
