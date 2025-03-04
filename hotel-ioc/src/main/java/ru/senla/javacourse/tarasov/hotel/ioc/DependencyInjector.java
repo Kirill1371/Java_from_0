@@ -5,11 +5,8 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.reflections.Reflections;
@@ -38,6 +35,24 @@ public class DependencyInjector {
         Ndependencies.forEach((key, value) -> logger.info("Именованный бин: " + key + ", Экземпляр: " + value));
         return this;
     }
+
+//    private final List<String> basePackages;
+//
+//    public DependencyInjector(String... basePackages) {
+//        this.basePackages = Arrays.asList(basePackages);
+//    }
+//
+//    public DependencyInjector init() {
+//        for (String basePackage : basePackages) {
+//            scanAndRegisterBeans(basePackage);
+//            scanAndRegisterComponents(basePackage);
+//        }
+//        dependencies.forEach((key, value) -> logger.info("Класс: " + key.getName()));
+//        Ndependencies.forEach((key, value) -> logger.info("Именованный бин: " + key + ", Экземпляр: " + value));
+//        return this;
+//    }
+
+
 
     public void scanAndRegisterBeans(String basePackage) {
         Reflections reflections = new Reflections(

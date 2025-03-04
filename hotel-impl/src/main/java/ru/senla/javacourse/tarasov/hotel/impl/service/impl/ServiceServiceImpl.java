@@ -7,7 +7,9 @@ import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
 import ru.senla.javacourse.tarasov.hotel.impl.mapper.ServiceMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
+//import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
+import ru.senla.javacourse.tarasov.hotel.impl.repository.GuestRepository;
+import ru.senla.javacourse.tarasov.hotel.impl.repository.ServiceRepository;
 import ru.senla.javacourse.tarasov.hotel.impl.service.ServiceService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
@@ -16,18 +18,19 @@ import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 public class ServiceServiceImpl implements ServiceService {
 
     @Inject
-    private HotelRepository hotelRepository;
+    private ServiceRepository serviceRepository;
+    private GuestRepository guestRepository;
 
     @Override
     public void addService(String guestName, ServiceDto serviceDto) {
         Service service = ServiceMapper.toEntity(serviceDto);
-        hotelRepository.addService(guestName, service);
+        serviceRepository.addService(guestName, service);
         System.out.println("Service added for guest: " + guestName + ", Service: " + service.getName());
     }
 
     @Override
     public List<ServiceDto> getGuestServicesSortedByPrice(String guestName) {
-        Guest guest = hotelRepository.getGuest(guestName);
+        Guest guest = guestRepository.getGuest(guestName);
         if (guest == null) {
             return new ArrayList<>();
         }
@@ -39,7 +42,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public List<ServiceDto> getGuestServicesSortedByDate(String guestName) {
-        Guest guest = hotelRepository.getGuest(guestName);
+        Guest guest = guestRepository.getGuest(guestName);
         if (guest == null) {
             return new ArrayList<>();
         }

@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 import ru.senla.javacourse.tarasov.hotel.api.controller.CheckController;
+import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
 
 public class CheckInHandler implements CommandHandler {
 
@@ -33,8 +34,8 @@ public class CheckInHandler implements CommandHandler {
             Date checkOutDate = dateFormat.parse(checkOutDateStr);
 
             // todo fix
-//            Guest guest = new Guest(guestName);
-//            checkController.checkIn(roomNumber, guest, checkInDate, checkOutDate);
+            GuestDto guestDto = new GuestDto(guestName);
+            checkController.checkIn(roomNumber, guestDto, checkInDate, checkOutDate);
 
             System.out.println("Guest checked in successfully.");
         } catch (ParseException e) {

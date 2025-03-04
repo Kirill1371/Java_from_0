@@ -19,4 +19,9 @@ public class GuestDto {
     private List<StayDto> stays;
 
     private List<ServiceDto> services;
+
+    public GuestDto(String name) {
+        this.name = name;
+    }
+
 }

@@ -11,18 +11,18 @@ public class RoomControllerExceptionHandlerProxy implements RoomController {
         this.roomController = roomController;
     }
 
-    public void addRoomToDatabase(RoomDto roomDto) {
+    public void addRoom(RoomDto roomDto) {
         try {
-            roomController.addRoomToDatabase(roomDto);
+            roomController.addRoom(roomDto);
         } catch(Exception e) {
             System.out.println("404");
         }
        
     }
 
-    public void removeRoomFromDatabase(int roomNumber) {
+    public void removeRoom(int roomNumber) {
         try {
-            roomController.removeRoomFromDatabase(roomNumber);
+            roomController.removeRoom(roomNumber);
         } catch(Exception e) {
             System.out.println("404");
         }
