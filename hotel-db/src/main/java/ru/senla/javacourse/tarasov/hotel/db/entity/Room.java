@@ -1,13 +1,7 @@
 package ru.senla.javacourse.tarasov.hotel.db.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +14,7 @@ import lombok.Setter;
 
 @Entity
 //@Table(name = "Room")
-@Table(name = "\"Room\"")
+@Table(name = "\"room\"")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -49,6 +43,10 @@ public class Room implements Serializable {
     @Column(name = "stars", nullable = false)
     private int stars;
 
-    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Stay> stays = new ArrayList<>();
+//    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Stay> stays = new ArrayList<>();
+
+    @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)
+    private List<Stay> stays;
+
 }

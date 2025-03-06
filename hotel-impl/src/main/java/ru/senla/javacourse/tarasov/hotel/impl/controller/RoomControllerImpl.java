@@ -17,14 +17,14 @@ public class RoomControllerImpl implements RoomController {
     private RoomService roomService;
 
     @Override
-    public void addRoomToDatabase(RoomDto roomDto) {
+    public void addRoom(RoomDto roomDto) {
         Room room = RoomMapper.toEntity(roomDto);
-        roomService.addRoomToDatabase(roomDto);
+        roomService.addRoom(roomDto);
     }
 
     @Override
-    public void removeRoomFromDatabase(int roomNumber) {
-        roomService.removeRoomFromDatabase(roomNumber);
+    public void removeRoom(int roomNumber) {
+        roomService.removeRoom(roomNumber);
     }
 
     @Override

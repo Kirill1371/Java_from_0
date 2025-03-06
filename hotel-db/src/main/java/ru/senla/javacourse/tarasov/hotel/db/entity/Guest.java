@@ -22,7 +22,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Entity
-@Table(name = "\"Guest\"")
+@Table(name = "\"guest\"")
 public class Guest {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
