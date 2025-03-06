@@ -8,11 +8,13 @@ import org.hibernate.Transaction;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Stay;
 //import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepositoryImpl;
 import ru.senla.javacourse.tarasov.hotel.impl.repository.StayRepository;
+import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 import java.util.Collections;
 import java.util.List;
 
+@Component
 public class StayRepositoryImpl implements StayRepository {
 
     private static final Logger logger = LogManager.getLogger(StayRepositoryImpl.class);

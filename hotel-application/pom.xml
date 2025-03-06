@@ -26,6 +26,12 @@
             <artifactId>hotel-ui</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
+        <dependency>
+            <groupId>ru.senla.javacourse.tarasov</groupId>
+            <artifactId>hotel-impl</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

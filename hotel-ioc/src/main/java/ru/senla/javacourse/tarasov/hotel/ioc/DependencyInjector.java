@@ -91,7 +91,6 @@ public class DependencyInjector {
 
 
 
-
     public void scanAndRegisterComponents(String basePackage) {
         Reflections reflections = new Reflections(basePackage);
         Set<Class<?>> componentClasses = reflections.getTypesAnnotatedWith(Component.class);
@@ -179,39 +178,71 @@ public class DependencyInjector {
         }
     }
 
-    private Object createInstanceWithDependencies(Constructor<?> constructor) throws Exception {
-        Class<?>[] parameterTypes = constructor.getParameterTypes();
-        Object[] parameters = new Object[parameterTypes.length];
-
-        logger.info("PT:    " + parameterTypes.length + constructor.getName());
+//    private Object createInstanceWithDependencies(Constructor<?> constructor) throws Exception {
+//        Class<?>[] parameterTypes = constructor.getParameterTypes();
+//        Object[] parameters = new Object[parameterTypes.length];
+//
+//        logger.info("PT:    " + parameterTypes.length + constructor.getName());
+////        for (int i = 0; i < parameterTypes.length; i++) {
+////            parameters[i] = dependencies.get(parameterTypes[i]);
+////            if (parameters[i] == null) {
+////                throw new RuntimeException("No registered dependency found for: " + parameterTypes[i].getName());
+////            }
+////        }
 //        for (int i = 0; i < parameterTypes.length; i++) {
-//            parameters[i] = dependencies.get(parameterTypes[i]);
-//            if (parameters[i] == null) {
-//                throw new RuntimeException("No registered dependency found for: " + parameterTypes[i].getName());
-//            }
+//            Class<?> type = parameterTypes[i];
+//            Optional.ofNullable(dependencies.get(type))
+//                .or(() -> {
+//                    try {
+//                        return Optional.ofNullable(createOrGetInstance(type));
+//                    } catch (Exception e) {
+//                        throw new RuntimeException(e);
+//                    }
+//                })
+//                .orElseThrow(() -> new RuntimeException("No registered dependency found for: " + type.getName()));
 //        }
-        for (int i = 0; i < parameterTypes.length; i++) {
-            Class<?> type = parameterTypes[i];
-            Optional.ofNullable(dependencies.get(type))
+//        logger.info("for:    " + parameterTypes.length + constructor.getName());
+//
+//        Object instance = constructor.newInstance(parameters);
+//        logger.info("Instance created with dependencies: " + instance.getClass().getName());
+//
+//        injectDependencies(instance);
+//
+//        dependencies.put(constructor.getDeclaringClass(), instance);
+//        return instance;
+//    }
+
+
+
+private Object createInstanceWithDependencies(Constructor<?> constructor) throws Exception {
+    Class<?>[] parameterTypes = constructor.getParameterTypes();
+    Object[] parameters = new Object[parameterTypes.length];
+
+    logger.info("Creating instance with dependencies for: " + constructor.getDeclaringClass().getName());
+    logger.info("Parameter types: " + Arrays.toString(parameterTypes));
+
+    for (int i = 0; i < parameterTypes.length; i++) {
+        Class<?> type = parameterTypes[i];
+        parameters[i] = Optional.ofNullable(dependencies.get(type))
                 .or(() -> {
                     try {
                         return Optional.ofNullable(createOrGetInstance(type));
                     } catch (Exception e) {
-                        throw new RuntimeException(e);
+                        throw new RuntimeException("Failed to create dependency: " + type.getName(), e);
                     }
                 })
                 .orElseThrow(() -> new RuntimeException("No registered dependency found for: " + type.getName()));
-        }
-        logger.info("for:    " + parameterTypes.length + constructor.getName());
-
-        Object instance = constructor.newInstance(parameters);
-        logger.info("Instance created with dependencies: " + instance.getClass().getName());
-
-        injectDependencies(instance);
-
-        dependencies.put(constructor.getDeclaringClass(), instance);
-        return instance;
     }
+
+    logger.info("Parameters: " + Arrays.toString(parameters));
+
+    Object instance = constructor.newInstance(parameters);
+    logger.info("Instance created: " + instance.getClass().getName());
+
+    injectDependencies(instance);
+    dependencies.put(constructor.getDeclaringClass(), instance);
+    return instance;
+}
 
     public void injectIntoExistingObject(Object object) {
         injectDependencies(object);

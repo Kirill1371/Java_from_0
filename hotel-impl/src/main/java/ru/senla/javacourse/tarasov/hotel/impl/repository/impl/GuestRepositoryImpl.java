@@ -21,6 +21,7 @@ import org.hibernate.query.Query;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.impl.repository.GuestRepository;
 
+@Component
 public class GuestRepositoryImpl implements GuestRepository {
 
 
