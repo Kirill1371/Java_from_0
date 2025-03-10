@@ -17,7 +17,7 @@ public class RemoveRoomHandler implements CommandHandler {
         int roomNumber = scanner.nextInt();
 
         try {
-            roomController.removeRoomFromDatabase(roomNumber);
+            roomController.removeRoom(roomNumber);
             System.out.println("Room removed successfully.");
         } catch (Exception e) {
             System.out.println("Failed to remove the room: " + e.getMessage());

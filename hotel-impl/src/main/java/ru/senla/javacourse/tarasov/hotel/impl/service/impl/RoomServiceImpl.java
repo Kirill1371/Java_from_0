@@ -7,7 +7,8 @@ import java.util.stream.Collectors;
 import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 import ru.senla.javacourse.tarasov.hotel.impl.mapper.RoomMapper;
-import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
+//import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
+import ru.senla.javacourse.tarasov.hotel.impl.repository.RoomRepository;
 import ru.senla.javacourse.tarasov.hotel.impl.service.RoomService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
@@ -16,22 +17,22 @@ import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 public class RoomServiceImpl implements RoomService {
 
     @Inject
-    private HotelRepository hotelRepository;
+    private RoomRepository roomRepository;
 
     @Override
-    public void addRoomToDatabase(RoomDto roomDto) {
+    public void addRoom(RoomDto roomDto) {
         Room room = RoomMapper.toEntity(roomDto);
-        hotelRepository.addRoom(room);
+        roomRepository.addRoom(room);
     }
 
     @Override
-    public void removeRoomFromDatabase(int roomNumber) {
-        hotelRepository.removeRoom(roomNumber);
+    public void removeRoom(int roomNumber) {
+        roomRepository.removeRoom(roomNumber);
     }
 
     @Override
     public void setRoomStatus(int roomNumber, String status) {
-        Room room = hotelRepository.getRoom(roomNumber);
+        Room room = roomRepository.getRoom(roomNumber);
         if (room != null) {
             room.setStatus(status);
             System.out.println("Room status updated: " + roomNumber + " to " + status);
@@ -42,7 +43,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void setRoomPrice(int roomNumber, double price) {
-        Room room = hotelRepository.getRoom(roomNumber);
+        Room room = roomRepository.getRoom(roomNumber);
         if (room != null) {
             room.setPrice(price);
             System.out.println("Room price updated: " + roomNumber + " to " + price);
@@ -53,17 +54,17 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomDto> getAllRooms() {
-        return RoomMapper.toDtoList(hotelRepository.getAllRooms());
+        return RoomMapper.toDtoList(roomRepository.getAllRooms());
     }
 
     @Override
     public List<RoomDto> getAvailableRooms() {
-        return RoomMapper.toDtoList(hotelRepository.getAvailableRooms());
+        return RoomMapper.toDtoList(roomRepository.getAvailableRooms());
     }
 
     @Override
     public List<RoomDto> getRoomsSortedByPrice() {
-        return hotelRepository.getAllRooms().stream()
+        return roomRepository.getAllRooms().stream()
                 .sorted(Comparator.comparingDouble(Room::getPrice))
                 .map(RoomMapper::toDto)
                 .collect(Collectors.toList());
@@ -71,7 +72,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomDto> getRoomsSortedByCapacity() {
-        return hotelRepository.getAllRooms().stream()
+        return roomRepository.getAllRooms().stream()
                 .sorted(Comparator.comparingInt(Room::getCapacity))
                 .map(RoomMapper::toDto)
                 .collect(Collectors.toList());
@@ -79,7 +80,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<RoomDto> getRoomsSortedByStars() {
-        return hotelRepository.getAllRooms().stream()
+        return roomRepository.getAllRooms().stream()
                 .sorted(Comparator.comparingInt(Room::getStars))
                 .map(RoomMapper::toDto)
                 .collect(Collectors.toList());
@@ -110,14 +111,14 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public int getTotalAvailableRooms() {
-        return (int) hotelRepository.getAllRooms().stream()
+        return (int) roomRepository.getAllRooms().stream()
                 .filter(room -> room.getStatus().equals("Available"))
                 .count();
     }
 
     @Override
     public List<RoomDto> getRoomsAvailableByDate(Date date) {
-        return hotelRepository.getAllRooms().stream()
+        return roomRepository.getAllRooms().stream()
                 .filter(room -> room.getStatus().equals("Available") ||
                         room.getStays().stream().anyMatch(stay -> stay.getCheckOutDate().before(date)))
                 .map(RoomMapper::toDto)
@@ -126,7 +127,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public RoomDto getRoomDetails(int roomNumber) {
-        Room room = hotelRepository.getRoom(roomNumber);
+        Room room = roomRepository.getRoom(roomNumber);
         return RoomMapper.toDto(room);
     }
 }

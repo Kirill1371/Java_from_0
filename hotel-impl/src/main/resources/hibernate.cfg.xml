@@ -17,9 +17,9 @@
         <property name="hibernate.format_sql">true</property>
 
         <!-- Указываем классы сущностей -->
-        <mapping class="com.test.model.Room"/>
-        <mapping class="com.test.model.Stay"/>
-        <mapping class="com.test.model.Guest"/>
-        <mapping class="com.test.model.Service"/>
+        <mapping class="ru.senla.javacourse.tarasov.hotel.db.entity.Room"/>
+        <mapping class="ru.senla.javacourse.tarasov.hotel.db.entity.Stay"/>
+        <mapping class="ru.senla.javacourse.tarasov.hotel.db.entity.Guest"/>
+        <mapping class="ru.senla.javacourse.tarasov.hotel.db.entity.Service"/>
     </session-factory>
 </hibernate-configuration>

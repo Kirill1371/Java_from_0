@@ -5,8 +5,8 @@ import java.util.List;
 import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
 
 public interface RoomService {
-    void addRoomToDatabase(RoomDto roomDto);
-    void removeRoomFromDatabase(int roomNumber);
+    void addRoom(RoomDto roomDto);
+    void removeRoom(int roomNumber);
     void setRoomStatus(int roomNumber, String status);
     void setRoomPrice(int roomNumber, double price);
     List<RoomDto> getAllRooms();

@@ -24,7 +24,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder(toBuilder = true)
 @Entity
-@Table(name = "\"Service\"")
+@Table(name = "\"service\"")
 public class Service {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
