@@ -1,0 +1,25 @@
+<hibernate-configuration>
+    <session-factory>
+        <!-- Настройки подключения к PostgreSQL -->
+        <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/Hotel</property>
+        <property name="hibernate.connection.username">postgres</property>
+        <property name="hibernate.connection.password">12345</property>
+
+        <!-- Диалект для PostgreSQL -->
+        <property name="hibernate.dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+
+        <!-- Автоматическое создание/обновление таблиц -->
+        <property name="hibernate.hbm2ddl.auto">update</property>
+
+        <!-- Логирование SQL-запросов -->
+        <property name="hibernate.show_sql">true</property>
+        <property name="hibernate.format_sql">true</property>
+
+        <!-- Указываем классы сущностей -->
+        <mapping class="ru.senla.javacourse.tarasov.hotel.db.entity.Room"/>
+        <mapping class="ru.senla.javacourse.tarasov.hotel.db.entity.Stay"/>
+        <mapping class="ru.senla.javacourse.tarasov.hotel.db.entity.Guest"/>
+        <mapping class="ru.senla.javacourse.tarasov.hotel.db.entity.Service"/>
+    </session-factory>
+</hibernate-configuration>
