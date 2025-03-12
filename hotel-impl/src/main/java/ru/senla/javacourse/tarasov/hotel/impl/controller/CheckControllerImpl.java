@@ -1,17 +1,24 @@
 package ru.senla.javacourse.tarasov.hotel.impl.controller;
 
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.senla.javacourse.tarasov.hotel.api.controller.CheckController;
 import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
 import ru.senla.javacourse.tarasov.hotel.impl.service.CheckService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
-@Component
+@Controller
 public class CheckControllerImpl implements CheckController {
 
-    @Inject
     private CheckService checkService;
+
+    @Autowired
+    public CheckControllerImpl(CheckService checkService) {
+        this.checkService = checkService;
+    }
 
     @Override
     public void checkIn(int roomNumber, GuestDto guestDto, Date checkInDate, Date checkOutDate) {

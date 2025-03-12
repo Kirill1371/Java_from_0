@@ -4,6 +4,9 @@ package ru.senla.javacourse.tarasov.hotel.impl.service.impl;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.impl.mapper.GuestMapper;
@@ -13,11 +16,15 @@ import ru.senla.javacourse.tarasov.hotel.impl.service.GuestService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
-@Component
+@Service
 public class GuestServiceImpl implements GuestService {
 
-    @Inject
     private GuestRepository guestRepository;
+
+    @Autowired // Внедрение зависимости через конструктор
+    public GuestServiceImpl(GuestRepository guestRepository) {
+        this.guestRepository = guestRepository;
+    }
 
     @Override
     public List<GuestDto> getAllGuests() {

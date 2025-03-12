@@ -1,17 +1,24 @@
 package ru.senla.javacourse.tarasov.hotel.impl.controller;
 
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.senla.javacourse.tarasov.hotel.api.controller.ServiceController;
 import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
 import ru.senla.javacourse.tarasov.hotel.impl.service.ServiceService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
-@Component
+@Controller
 public class ServiceControllerImpl implements ServiceController {
 
-    @Inject
     private ServiceService serviceService;
+
+    @Autowired // Внедрение зависимости через конструктор
+    public ServiceControllerImpl(ServiceService serviceService) {
+        this.serviceService = serviceService;
+    }
 
     @Override
     public void addService(String guestName, ServiceDto serviceDto) {

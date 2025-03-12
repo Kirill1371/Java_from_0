@@ -4,6 +4,10 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 import ru.senla.javacourse.tarasov.hotel.impl.mapper.RoomMapper;
@@ -13,11 +17,22 @@ import ru.senla.javacourse.tarasov.hotel.impl.service.RoomService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
-@Component
+@Service
 public class RoomServiceImpl implements RoomService {
 
-    @Inject
     private RoomRepository roomRepository;
+
+    @Value("${room.default.price}")
+    private double defaultPrice;
+
+    @Value("${room.default.capacity}")
+    private int defaultCapacity;
+
+
+    @Autowired // Внедрение зависимости через конструктор
+    public RoomServiceImpl(RoomRepository roomRepository) {
+        this.roomRepository = roomRepository;
+    }
 
     @Override
     public void addRoom(RoomDto roomDto) {

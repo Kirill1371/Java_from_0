@@ -8,18 +8,25 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 //import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
 import ru.senla.javacourse.tarasov.hotel.impl.repository.RoomRepository;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
-@Component
+@Repository
 public class RoomRepositoryImpl implements RoomRepository {
 
     private static final Logger logger = LogManager.getLogger(RoomRepositoryImpl.class);
-    @Inject
+
     private SessionFactory sessionFactory;
+
+    @Autowired // Внедрение зависимости через конструктор
+    public RoomRepositoryImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public void addRoom(Room room) {

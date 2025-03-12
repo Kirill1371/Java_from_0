@@ -3,6 +3,8 @@ package ru.senla.javacourse.tarasov.hotel.impl.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import org.springframework.stereotype.Service.*;
 import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
@@ -13,13 +15,21 @@ import ru.senla.javacourse.tarasov.hotel.impl.repository.ServiceRepository;
 import ru.senla.javacourse.tarasov.hotel.impl.service.ServiceService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
+//import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Component
+@org.springframework.stereotype.Service
+
 public class ServiceServiceImpl implements ServiceService {
 
-    @Inject
     private ServiceRepository serviceRepository;
     private GuestRepository guestRepository;
+
+    @Autowired // Внедрение зависимости через конструктор
+    public ServiceServiceImpl(ServiceRepository serviceRepository, GuestRepository guestRepository) {
+        this.serviceRepository = serviceRepository;
+        this.guestRepository = guestRepository;
+    }
 
     @Override
     public void addService(String guestName, ServiceDto serviceDto) {
