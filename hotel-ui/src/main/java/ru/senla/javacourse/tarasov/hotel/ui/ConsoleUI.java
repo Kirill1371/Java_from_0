@@ -2,7 +2,10 @@ package ru.senla.javacourse.tarasov.hotel.ui;
 
 import java.util.List;
 import java.util.Scanner;
-import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.stereotype.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
 @Component
@@ -10,7 +13,7 @@ public class ConsoleUI {
 
     private final List<MenuItem> menuItems;
 
-    @Inject
+    @Autowired
     public ConsoleUI(MenuBuilder menuBuilder) {
         this.menuItems = menuBuilder.buildMenuItems();
     }

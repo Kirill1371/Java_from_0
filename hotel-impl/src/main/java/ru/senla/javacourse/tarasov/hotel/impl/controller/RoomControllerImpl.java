@@ -2,6 +2,9 @@ package ru.senla.javacourse.tarasov.hotel.impl.controller;
 
 import java.util.Date;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
 import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
@@ -10,11 +13,15 @@ import ru.senla.javacourse.tarasov.hotel.impl.service.RoomService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
-@Component
+@Controller
 public class RoomControllerImpl implements RoomController {
 
-    @Inject
     private RoomService roomService;
+
+    @Autowired
+    public RoomControllerImpl(RoomService roomService) {
+        this.roomService = roomService;
+    }
 
     @Override
     public void addRoom(RoomDto roomDto) {

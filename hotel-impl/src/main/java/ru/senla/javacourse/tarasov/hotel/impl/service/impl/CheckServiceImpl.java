@@ -1,6 +1,9 @@
 package ru.senla.javacourse.tarasov.hotel.impl.service.impl;
 
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
@@ -8,19 +11,27 @@ import ru.senla.javacourse.tarasov.hotel.db.entity.Stay;
 import ru.senla.javacourse.tarasov.hotel.impl.mapper.GuestMapper;
 import ru.senla.javacourse.tarasov.hotel.impl.repository.GuestRepository;
 //import ru.senla.javacourse.tarasov.hotel.impl.repository.HotelRepository;
+import ru.senla.javacourse.tarasov.hotel.impl.repository.ServiceRepository;
 import ru.senla.javacourse.tarasov.hotel.impl.repository.RoomRepository;
 import ru.senla.javacourse.tarasov.hotel.impl.repository.StayRepository;
 import ru.senla.javacourse.tarasov.hotel.impl.service.CheckService;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Component;
 import ru.senla.javacourse.tarasov.hotel.ioc.annotations.Inject;
 
-@Component
+@Service
 public class CheckServiceImpl implements CheckService {
 
-    @Inject
     private RoomRepository roomRepository;
     private GuestRepository guestRepository;
     private StayRepository stayRepository;
+
+
+    @Autowired // Внедрение зависимости через конструктор
+    public CheckServiceImpl(RoomRepository roomRepository, GuestRepository guestRepository, StayRepository stayRepository) {
+        this.roomRepository = roomRepository;
+        this.guestRepository = guestRepository;
+        this.stayRepository = stayRepository;
+    }
 
     @Override
     public void checkIn(int roomNumber, GuestDto guestDto, Date checkInDate, Date checkOutDate) {
