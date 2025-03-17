@@ -1,9 +1,14 @@
 package ru.senla.javacourse.tarasov.hotel.api.controller;
 
+import org.springframework.http.ResponseEntity;
+import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
+
+import java.util.List;
+
 public interface GuestController {
-    public void listAllGuests();
-    public void listGuestsSortedByName();
-    public void listGuestsSortedByCheckOutDate();
-    public void getTotalGuests();
-    public void getTotalPaymentForGuest(String guestName);  
+    ResponseEntity<List<GuestDto>> listAllGuests();
+    ResponseEntity<List<GuestDto>> listGuestsSortedByName();
+    ResponseEntity<List<GuestDto>> listGuestsSortedByCheckOutDate();
+    ResponseEntity<Integer> getTotalGuests();
+    ResponseEntity<Double> getTotalPaymentForGuest(String guestName);
 } 

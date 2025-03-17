@@ -1,8 +1,12 @@
 package ru.senla.javacourse.tarasov.hotel.impl.controller.proxy;
 
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import ru.senla.javacourse.tarasov.hotel.api.controller.ServiceController;
 import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
+
+import java.util.List;
 
 public class ServiceControllerExceptionHandlerProxy implements ServiceController {
 
@@ -12,28 +16,33 @@ public class ServiceControllerExceptionHandlerProxy implements ServiceController
         this.serviceController = serviceController; 
     }
     
-    
-    public void addService(String guestName, ServiceDto service) {
+    @Override
+    public ResponseEntity<Void> addService(String guestName, ServiceDto service) {
         try {
-            serviceController.addService(guestName, service);
+            return serviceController.addService(guestName, service);
         } catch (Exception e) {
             System.out.println("404");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    public void listGuestServicesSortedByPrice(String guestName) {
+    @Override
+    public ResponseEntity<List<ServiceDto>> listGuestServicesSortedByPrice(String guestName) {
         try {
-            serviceController.listGuestServicesSortedByPrice(guestName);
+            return serviceController.listGuestServicesSortedByPrice(guestName);
         } catch (Exception e) {
             System.out.println("404");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
-    public void listGuestServicesSortedByDate(String guestName) {
+    @Override
+    public ResponseEntity<List<ServiceDto>> listGuestServicesSortedByDate(String guestName) {
         try {
-            serviceController.listGuestServicesSortedByDate(guestName);
+            return serviceController.listGuestServicesSortedByDate(guestName);
         } catch (Exception e) {
             System.out.println("404");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 }

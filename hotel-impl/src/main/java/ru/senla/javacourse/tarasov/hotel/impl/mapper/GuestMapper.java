@@ -28,11 +28,11 @@ public class GuestMapper {
                 .stays(guestDto.getStays() != null ?
                         guestDto.getStays().stream()
                                 .map(StayMapper::toEntity)
-                                .collect(Collectors.toList()) : null)
+                                .collect(Collectors.toSet()) : null)
                 .services(guestDto.getServices() != null ?
                         guestDto.getServices().stream()
                                 .map(ServiceMapper::toEntity)
-                                .collect(Collectors.toList()) : null)
+                                .collect(Collectors.toSet()) : null)
                 .build();
     }
 

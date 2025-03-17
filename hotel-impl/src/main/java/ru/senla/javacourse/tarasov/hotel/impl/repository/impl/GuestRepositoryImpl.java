@@ -10,7 +10,9 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import ru.senla.javacourse.tarasov.hotel.api.dto.GuestDto;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Guest;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 import ru.senla.javacourse.tarasov.hotel.db.entity.Service;
@@ -27,8 +29,13 @@ public class GuestRepositoryImpl implements GuestRepository {
 
 
     private static final Logger logger = LogManager.getLogger(GuestRepositoryImpl.class);
-    @Inject
+
     private SessionFactory sessionFactory;
+
+    @Autowired // Внедрение зависимости через конструктор
+    public GuestRepositoryImpl(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     @Override
     public Guest getGuest(String name) {
@@ -48,6 +55,16 @@ public class GuestRepositoryImpl implements GuestRepository {
             return null;
         }
     }
+
+//    @Override
+//    public List<Guest> getAllGuests() {
+//        try (Session session = sessionFactory.openSession()) {
+//            return session.createQuery("FROM Guest", Guest.class).list();
+//        } catch (Exception e) {
+//            logger.error("Error while fetching guests: " + e.getMessage(), e);
+//            return Collections.emptyList();
+//        }
+//    }
 
     @Override
     public List<Guest> getAllGuests() {
@@ -79,6 +96,33 @@ public class GuestRepositoryImpl implements GuestRepository {
         } catch (Exception e) {
             logger.error("Error while fetching guest by name: " + e.getMessage(), e);
             return null;
+        }
+    }
+
+
+    public List<Guest> getAllGuestsWithStays() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery(
+                            "SELECT DISTINCT g FROM Guest g " +
+                                    "LEFT JOIN FETCH g.stays", Guest.class)
+                    .getResultList();
+        } catch (Exception e) {
+            logger.error("Error while fetching guests with stays: " + e.getMessage(), e);
+            return Collections.emptyList();
+        }
+    }
+
+
+    public List<Guest> getAllGuestsWithStaysAndServices() {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery(
+                            "SELECT DISTINCT g FROM Guest g " +
+                                    "LEFT JOIN FETCH g.stays " +
+                                    "LEFT JOIN FETCH g.services", Guest.class)
+                    .getResultList();
+        } catch (Exception e) {
+            logger.error("Error while fetching guests with stays and services: " + e.getMessage(), e);
+            return Collections.emptyList();
         }
     }
 }

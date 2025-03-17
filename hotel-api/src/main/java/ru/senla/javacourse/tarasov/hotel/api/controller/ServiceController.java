@@ -1,10 +1,13 @@
 package ru.senla.javacourse.tarasov.hotel.api.controller;
 
 
+import org.springframework.http.ResponseEntity;
 import ru.senla.javacourse.tarasov.hotel.api.dto.ServiceDto;
 
+import java.util.List;
+
 public interface ServiceController {
-    public void addService(String guestName, ServiceDto service);
-    public void listGuestServicesSortedByPrice(String guestName);
-    public void listGuestServicesSortedByDate(String guestName);
+    public ResponseEntity<Void> addService(String guestName, ServiceDto service);
+    public ResponseEntity<List<ServiceDto>> listGuestServicesSortedByPrice(String guestName);
+    public ResponseEntity<List<ServiceDto>> listGuestServicesSortedByDate(String guestName);
 } 

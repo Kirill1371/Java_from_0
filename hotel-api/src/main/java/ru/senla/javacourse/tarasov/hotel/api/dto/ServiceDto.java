@@ -19,7 +19,7 @@ public class ServiceDto {
 
     private Date date;
 
-    private GuestDto guest;
+    //private GuestDto guest;
 
     public ServiceDto(String name, double price, String category) {
         this.name = name;

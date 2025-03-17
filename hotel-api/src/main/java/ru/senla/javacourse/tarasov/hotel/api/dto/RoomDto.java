@@ -22,7 +22,7 @@ public class RoomDto {
 
     private int stars;
 
-    private List<StayDto> stays = new ArrayList<>();
+    //private List<StayDto> stays = new ArrayList<>();
 
     public RoomDto(int number, double price, int capacity, int stars) {
         this.number = number;

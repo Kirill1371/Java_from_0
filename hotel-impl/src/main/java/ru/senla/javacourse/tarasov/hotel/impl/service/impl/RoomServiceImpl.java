@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,17 +36,20 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public void addRoom(RoomDto roomDto) {
         Room room = RoomMapper.toEntity(roomDto);
         roomRepository.addRoom(room);
     }
 
     @Override
+    @Transactional
     public void removeRoom(int roomNumber) {
         roomRepository.removeRoom(roomNumber);
     }
 
     @Override
+    @Transactional
     public void setRoomStatus(int roomNumber, String status) {
         Room room = roomRepository.getRoom(roomNumber);
         if (room != null) {
@@ -57,6 +61,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional
     public void setRoomPrice(int roomNumber, double price) {
         Room room = roomRepository.getRoom(roomNumber);
         if (room != null) {
