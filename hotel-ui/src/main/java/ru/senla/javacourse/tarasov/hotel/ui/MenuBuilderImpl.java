@@ -106,9 +106,14 @@ public class MenuBuilderImpl implements MenuBuilder {
                            GuestController guestController,
                            ServiceController serviceController) {
         this.roomController = roomController;
+        System.out.println("MenuBuilderImpl создан с RoomController: " + roomController);
         this.checkController = checkController;
+        System.out.println("MenuBuilderImpl создан с CheckController: " + checkController);
         this.guestController = guestController;
+        System.out.println("MenuBuilderImpl создан с GuestController: " + guestController);
         this.serviceController = serviceController;
+        System.out.println("MenuBuilderImpl создан с ServiceController: " + serviceController);
+
     }
 
     @Override

@@ -1,14 +1,9 @@
 package ru.senla.javacourse.tarasov.hotel.db.entity;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,10 +26,17 @@ public class Guest {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Stay> stays;
+//    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
+//    //@OneToMany(mappedBy = "guest", fetch = FetchType.EAGER)
+//    private List<Stay> stays;
+//
+//    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Service> services;
+    @OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
+    private Set<Stay> stays;
 
-    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Service> services;
+    @OneToMany(mappedBy = "guest", fetch = FetchType.LAZY)
+    private Set<Service> services;
+
 }
 

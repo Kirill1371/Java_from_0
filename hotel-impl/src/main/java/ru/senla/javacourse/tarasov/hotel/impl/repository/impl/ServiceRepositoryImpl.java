@@ -51,6 +51,26 @@ public class ServiceRepositoryImpl implements ServiceRepository {
         }
     }
 
+//    @Override
+//    public List<Service> getServicesForGuest(String guestName) {
+//        try (Session session = sessionFactory.openSession()) {
+//            Guest guest = session.createQuery("FROM Guest WHERE name = :guestName", Guest.class)
+//                    .setParameter("guestName", guestName)
+//                    .uniqueResult();
+//
+//            if (guest != null) {
+//                return guest.getServices();
+//            } else {
+//                logger.warn("Guest not found: " + guestName);
+//                return new ArrayList<>();
+//            }
+//        } catch (Exception e) {
+//            logger.error("Error while fetching services for guest: " + e.getMessage(), e);
+//            return new ArrayList<>();
+//        }
+//    }
+
+
     @Override
     public List<Service> getServicesForGuest(String guestName) {
         try (Session session = sessionFactory.openSession()) {
@@ -59,7 +79,7 @@ public class ServiceRepositoryImpl implements ServiceRepository {
                     .uniqueResult();
 
             if (guest != null) {
-                return guest.getServices();
+                return new ArrayList<>(guest.getServices()); // Преобразуем Set в List
             } else {
                 logger.warn("Guest not found: " + guestName);
                 return new ArrayList<>();

@@ -14,7 +14,7 @@ public class ServiceMapper {
                 .price(service.getPrice())
                 .category(service.getCategory())
                 .date(service.getDate())
-                .guest(GuestMapper.toDto(service.getGuest()))
+                //.guest(GuestMapper.toDto(service.getGuest()))
                 .build();
     }
 
@@ -25,7 +25,7 @@ public class ServiceMapper {
                 .price(serviceDto.getPrice())
                 .category(serviceDto.getCategory())
                 .date(serviceDto.getDate())
-                .guest(GuestMapper.toEntity(serviceDto.getGuest()))
+                //.guest(GuestMapper.toEntity(serviceDto.getGuest()))
                 .build();
     }
 
