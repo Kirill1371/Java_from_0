@@ -66,10 +66,47 @@ package ru.senla.javacourse.tarasov.hotel.application;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
-@SpringBootApplication(scanBasePackages = "ru.senla.javacourse.tarasov.hotel")
+//@SpringBootApplication(scanBasePackages = "ru.senla.javacourse.tarasov.hotel")
+
+//@SpringBootApplication
+//@SpringBootApplication(scanBasePackages = {
+//        "ru.senla.javacourse.tarasov.hotel.application", // ваш текущий пакет
+//        "ru.senla.javacourse.tarasov.hotel.impl.controller", // пакет с контроллерами
+//        "ru.senla.javacourse.tarasov.hotel.impl.security", // пакет с security
+//        "ru.senla.javacourse.tarasov.hotel.impl.config"
+//})
+@SpringBootApplication(scanBasePackages = {
+        "ru.senla.javacourse.tarasov.hotel.application", // ваш текущий пакет
+        "ru.senla.javacourse.tarasov.hotel.impl.controller", // пакет с контроллерами
+        "ru.senla.javacourse.tarasov.hotel.impl.security", // пакет с security
+        "ru.senla.javacourse.tarasov.hotel.impl.config",
+        "ru.senla.javacourse.tarasov.hotel.impl.service",
+        "ru.senla.javacourse.tarasov.hotel.impl.repository"
+})
+
+
+@EnableJpaRepositories(basePackages = "ru.senla.javacourse.tarasov.hotel.impl.repository")
+@EntityScan(basePackages = "ru.senla.javacourse.tarasov.hotel.db.entity")
+
 public class App {
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
+
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        String newPassword = "admin123"; // Новый пароль
+//        String encodedPassword = encoder.encode(newPassword);
+//        System.out.println("Новый хеш: " + encodedPassword);
+
+//        String rawPassword = "admin";
+//        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+//        String hash1 = "$2a$10$R1Zlx9fR83yZjlNmTWDP3uxhgHFJBpx1PLdg9/6UiuWnf./fC7/ie";
+//        String hash2 = "$2a$10$QSY.YFYpubiPYRcsJWt8ougXg0s0Ho3W971iYRBfhLuws.6gpaOFS";
+//
+//        System.out.println(encoder.matches(rawPassword, hash1)); // true
+//        System.out.println(encoder.matches(rawPassword, hash2)); // true
     }
 }
