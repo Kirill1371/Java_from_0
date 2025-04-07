@@ -30,37 +30,6 @@ public class GuestServiceImpl implements GuestService {
         this.guestRepository = guestRepository;
     }
 
-//    @Override
-//    public List<GuestDto> getAllGuests() {
-//        return GuestMapper.toDtoList(guestRepository.getAllGuests());
-//    }
-
-//    @Override
-//    @Transactional
-//    public List<GuestDto> getGuestsSortedByName() {
-//        return guestRepository.getAllGuests().stream()
-//                .sorted((g1, g2) -> g1.getName().compareTo(g2.getName()))
-//                .map(GuestMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
-
-//    @Override
-//    @Transactional
-//    public List<GuestDto> getGuestsSortedByName() {
-//        List<Guest> guests = guestRepository.getAllGuests();
-//
-//        // Принудительная инициализация Lazy-связей до выхода из транзакции
-//        guests.forEach(guest -> {
-//            guest.getStays().size();     // Принудительная загрузка списка
-//            guest.getServices().size();  // Принудительная загрузка списка
-//        });
-//
-//        return guests.stream()
-//                .sorted(Comparator.comparing(Guest::getName))
-//                .map(GuestMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
-
     @Override
     public List<GuestDto> getAllGuests() {
         // Загружаем гостей
@@ -86,57 +55,6 @@ public class GuestServiceImpl implements GuestService {
                 .map(GuestMapper::toDto)
                 .collect(Collectors.toList());
     }
-
-
-//    @Override
-//    @Transactional
-//    public List<GuestDto> getGuestsSortedByName() {
-//        List<Guest> guests = guestRepository.getAllGuests();
-//
-//        // Принудительная инициализация Lazy-связей
-//        guests.forEach(guest -> {
-//            Hibernate.initialize(guest.getStays());     // Принудительная загрузка списка
-//            Hibernate.initialize(guest.getServices());  // Принудительная загрузка списка
-//        });
-//
-//        return guests.stream()
-//                .sorted(Comparator.comparing(Guest::getName))
-//                .map(GuestMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
-
-//    @Override
-//    public List<GuestDto> getGuestsSortedByCheckOutDate() {
-//        return guestRepository.getAllGuests().stream()
-//                .sorted((g1, g2) -> {
-//                    Date d1 = g1.getStays().get(g1.getStays().size() - 1).getCheckOutDate();
-//                    Date d2 = g2.getStays().get(g2.getStays().size() - 1).getCheckOutDate();
-//                    return d1.compareTo(d2);
-//                })
-//                .map(GuestMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
-
-
-
-//    @Override
-//    public List<GuestDto> getGuestsSortedByCheckOutDate() {
-//        // Загружаем гостей с их stays
-//        List<Guest> guests = guestRepository.getAllGuestsWithStays();
-//
-//        // Сортируем гостей по дате выезда
-//        guests.sort((g1, g2) -> {
-//            Date d1 = g1.getStays().get(g1.getStays().size() - 1).getCheckOutDate();
-//            Date d2 = g2.getStays().get(g2.getStays().size() - 1).getCheckOutDate();
-//            return d1.compareTo(d2);
-//        });
-//
-//        // Преобразуем в DTO
-//        return guests.stream()
-//                .map(GuestMapper::toDto)
-//                .collect(Collectors.toList());
-//    }
-
 
     @Override
     public List<GuestDto> getGuestsSortedByCheckOutDate() {
