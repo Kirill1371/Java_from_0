@@ -8,6 +8,9 @@ import ru.senla.javacourse.tarasov.hotel.db.entity.Room;
 public class RoomMapper {
 
     public static RoomDto toDto(Room room) {
+        if (room == null) {
+            return null;
+        }
         return RoomDto.builder()
                 .number(room.getNumber())
                 .status(room.getStatus())
