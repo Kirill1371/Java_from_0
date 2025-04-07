@@ -119,6 +119,7 @@ package ru.senla.javacourse.tarasov.hotel.impl.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.senla.javacourse.tarasov.hotel.api.controller.RoomController;
 import ru.senla.javacourse.tarasov.hotel.api.dto.RoomDto;
@@ -133,22 +134,37 @@ public class RoomControllerImpl implements RoomController {
 
     private final RoomService roomService;
 
-    @Autowired
-    public RoomControllerImpl(RoomService roomService) {
-        this.roomService = roomService;
-    }
-
     @PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> addRoom(@RequestBody RoomDto roomDto) {
         roomService.addRoom(roomDto);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{roomNumber}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> removeRoom(@PathVariable int roomNumber) {
         roomService.removeRoom(roomNumber);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
+    @Autowired
+    public RoomControllerImpl(RoomService roomService) {
+        this.roomService = roomService;
+    }
+
+//    @PostMapping
+//    public ResponseEntity<Void> addRoom(@RequestBody RoomDto roomDto) {
+//        roomService.addRoom(roomDto);
+//        return new ResponseEntity<>(HttpStatus.CREATED);
+//    }
+//
+//    @DeleteMapping("/{roomNumber}")
+//    public ResponseEntity<Void> removeRoom(@PathVariable int roomNumber) {
+//        roomService.removeRoom(roomNumber);
+//        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+//    }
 
     @PutMapping("/{roomNumber}/status")
     public ResponseEntity<Void> setRoomStatus(@PathVariable int roomNumber, @RequestParam String status) {
