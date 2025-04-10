@@ -1,0 +1,19 @@
+{
+    "java.project.sourcePaths": [
+        "src\\src"
+    ],
+    "java.project.referencedLibraries": [
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\commons-collections4.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\commons-io.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\commons-lang3.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\commons-text.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\jaxb-api.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\jaxb-core.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\jaxb-runtime.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\jaybird.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\jcc.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\liquibase-core.jar",
+        "c:\\Users\\Kirill\\Downloads\\liquibase-4.31.0\\internal\\lib\\postgresql.jar",
+        "c:\\Users\\Kirill\\Downloads\\postgresql-42.7.5.jar"
+    ]
+}
